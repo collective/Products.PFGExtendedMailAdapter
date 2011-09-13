@@ -1,0 +1,78 @@
+Initial imports and defines
+----
+    >>> from Products.CMFCore.utils import getToolByName
+    >>> wftool = getToolByName(portal, "portal_workflow")
+    >>> types = getToolByName(portal, 'portal_types')
+
+
+Check PFGExtendedMailAdapter
+----
+    >>> adapter = types.getTypeInfo('PFGExtendedMailAdapter')
+    >>> adapter.title
+    'Extended Mail Adapter'
+    >>> adapter.description
+    'Extended Mail Adapter'
+    >>> adapter.content_meta_type
+    'PFGExtendedMailAdapter'
+    >>> adapter.factory
+    'addPFGExtendedMailAdapter'
+    >>> adapter.immediate_view
+    'base_view'
+    >>> adapter.global_allow == False
+    True
+    >>> adapter.filter_content_types == False
+    True
+    >>> adapter.allowed_content_types
+    ()
+    >>> adapter.default_view
+    'base_view'
+    >>> 'base_view' in adapter.view_methods
+    True
+
+    >>> adapter.getMethodAliases()
+    {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
+    >>> actions = adapter.listActions()
+    >>> for action in actions:
+    ...     (action.title, action.id, action.getActionExpression(), action.visible, action.permissions)
+    ('View', 'view', 'string:${object_url}/view', True, (u'View',))
+    ('Edit', 'edit', 'string:${object_url}/edit', True, (u'Modify portal content',))
+
+
+Creating PFGExtendedMailAdapter
+----
+    >>> from Products.PFGExtendedMailAdapter.content import PFGExtendedMailAdapter
+    >>> adapter = PFGExtendedMailAdapter('adapter')
+    >>> adapter
+     <PFGExtendedMailAdapter at adapter>
+
+    >>> adapter._at_rename_after_creation
+    True
+
+message schemata
+====
+    >>> adapter.Schema().getSchemataFields('message')
+    [<Field msg_subject(string:rw)>, <Field subject_field(string:rw)>, <Field body_pre(text:rw)>, <Field body_post(text:rw)>, <Field body_footer(text:rw)>, <Field showAll(boolean:rw)>, <Field showFields(lines:rw)>, <Field includeEmpties(boolean:rw)>, <Field msg_attachments(lines:rw)>]
+
+Field: msg_attachments
+----
+    >>> adapter.getField('msg_attachments')
+    <Field msg_attachments(lines:rw)>
+    >>> adapter.getField('msg_attachments').schemata
+    'message'
+    >>> adapter.getField('msg_attachments').required
+    False
+    >>> adapter.getField('msg_attachments').searchable
+    False
+    >>> adapter.getField('msg_attachments').storage
+    <Storage AnnotationStorage>
+    >>> adapter.getField('msg_attachments').vocabulary
+    'attachments'
+    >>> adapter.getField('msg_attachments').enforceVocabulary
+    True
+    >>> adapter.getField('msg_attachments').widget
+    <Products.Archetypes.Widget.MultiSelectionWidget object at ...>
+    >>> adapter.getField('msg_attachments').widget.label
+    u'E-mail Attachments'
+    >>> adapter.getField('msg_attachments').widget.description
+    u'Please select the attachments to be sent with email when one has successfully finished inputs of the form.'
+

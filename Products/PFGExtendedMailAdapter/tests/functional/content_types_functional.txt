@@ -1,0 +1,130 @@
+Initial imports and defines.
+----
+    >>> from Products.CMFCore.utils import getToolByName
+    >>> portal_url =  portal.absolute_url()
+    >>> import StringIO
+    >>> dummy_image = StringIO.StringIO('Dummy Image')
+    >>> dummy_file = StringIO.StringIO('Dummy File')
+
+Setting up.
+----
+    >>> try:
+    ...     from Testing.testbrowser import Browser
+    ... except ImportError:
+    ...     from Products.Five.testbrowser import Browser
+    >>> browser = Browser()
+
+For debugging.
+----
+    >>> browser.handleErrors = True
+    >>> portal.error_log._ignored_exceptions = ()
+
+Turn off portlets.
+----
+    >>> from zope.component import getUtility, getMultiAdapter
+    >>> from plone.portlets.interfaces import IPortletManager
+    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
+
+    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
+    >>> left_assignable = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
+    >>> for name in left_assignable.keys():
+    ...     del left_assignable[name]
+
+    >>> right_column = getUtility(IPortletManager, name=u"plone.rightcolumn")
+    >>> right_assignable = getMultiAdapter((portal, right_column), IPortletAssignmentMapping)
+    >>> for name in right_assignable.keys():
+    ...     del right_assignable[name]
+
+Log in as the portal owner.
+----
+    >>> browser.open(portal_url)
+    >>> from Products.PloneTestCase.setup import portal_owner, default_password
+    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
+    >>> browser.getControl(name='__ac_name').value = portal_owner
+    >>> browser.getControl(name='__ac_password').value = default_password
+    >>> browser.getControl(name='submit').click()
+
+Verify that we can create FormFolder under portal but not PFGExtendedMailAdapter.
+----
+    >>> browser.getLink(id='formfolder').url.endswith("createObject?type_name=FormFolder")
+    True
+    >>> browser.getLink(id='pfgextendedmailadapter').url.endswith("createObject?type_name=PFGExtendedMailAdapter")
+    Traceback (most recent call last):
+    ...
+    LinkNotFoundError
+
+Add FormFolder under portal.
+----
+    >>> browser.open(portal_url)
+    >>> browser.getLink(id='formfolder').click()
+    >>> browser.getControl(name='title').value = "Form Folder"
+    >>> browser.getControl('Save').click()
+    >>> 'form-folder' in portal.objectIds()
+    True
+    >>> form = portal['form-folder']
+    >>> form_url = form.absolute_url()
+    >>> form.getId()
+    'form-folder'
+    >>> form.Title()
+    'Form Folder'
+
+Verify that we can create PFGExtendedMailAdapter.
+----
+    >>> open('/tmp/testbrowser.html', 'w').write(browser.contents)
+    >>> browser.getLink(id='pfgextendedmailadapter').url.endswith("createObject?type_name=PFGExtendedMailAdapter")
+    True
+
+Add PFGExtendedMailAdapter.
+----
+    >>> browser.getLink(id='pfgextendedmailadapter').click()
+    >>> browser.getControl(name='title').value = "Extended Mail Adapter"
+    >>> browser.getControl('Save').click()
+
+#    >>> try:
+#    ...     browser.getControl(name='title').value = "Extended Mail Adapter"
+#    ...     browser.getControl('Save').click()
+#    ... except LookupError:
+#    ...     browser.getControl(name='title').value = "Extended Mail Adapter"
+#    ...     browser.getControl('Save').click()
+
+    >>> 'Extended Mail Adapter' in browser.contents
+    True
+    >>> adapter = form['extended-mail-adapter']
+    >>> adapter_url = adapter.absolute_url()
+
+Check if images and files are not shown in msg_attachments field.
+----
+
+#    >>> try:
+#    ...     browser.getLink('message').click()
+#    ... except:
+#    ...     pass
+
+    >>> 'name="msg_attachments:list"' not in browser.contents
+    True
+
+Add Image and File content type to adapter.
+----
+    >>> url = '%s/createObject?type_name=Image' % adapter_url
+    >>> browser.open(url)
+    >>> browser.getControl(name='image_file').mech_control.add_file(dummy_image, filename='dummy.gif')
+    >>> browser.getControl('Save').click()
+    >>> dimage = adapter['dummy.gif']
+    >>> dimage_uid = dimage.UID()
+    >>> url = '%s/createObject?type_name=File' % adapter_url
+    >>> browser.open(url)
+    >>> browser.getControl(name='file_file').mech_control.add_file(dummy_file, filename='dummy.pdf')
+    >>> browser.getControl('Save').click()
+    >>> dfile = adapter['dummy.pdf']
+    >>> dfile_uid = dfile.UID()
+    >>> browser.open(adapter_url)
+    >>> browser.getLink('Edit').click()
+
+#    >>> try:
+#    ...     browser.getLink('message').click()
+#    ... except:
+#    ...     pass
+
+    >>> browser.getControl(name="msg_attachments:list").value = [dimage_uid]
+    >>> browser.getControl('Save').click()
+    >>> browser.getLink('Edit').click()

@@ -1,0 +1,37 @@
+Installation
+============
+
+Use zc.buildout and the plone.recipe.zope2instance
+recipe to manage packages:
+
+
+* Add ``Products.PFGExtendedMailAdapter`` to the list of eggs to install, e.g.::
+
+    [buildout]
+    eggs =
+        Products.PFGExtendedMailAdapter
+
+* Tell the plone.recipe.zope2instance recipe to install a ZCML slug::
+
+    [instance]
+    recipe = plone.recipe.zope2instance
+    zcml =
+        Products.PFGExtendedMailAdapter
+
+* Re-run buildout, e.g. with::
+
+    $ ./bin/buildout
+
+You can skip the ZCML slug if you are going to explicitly include the package
+from another package's configure.zcml file.
+
+
+Because its top level Python namespace package is called ``Products``, this
+package can also be installed in Zope 2 as an old style **Zope 2 Product**.
+
+For that, move (or symlink) the ``PFGExtendedMailAdapter`` folder of this project
+(``Products.PFGExtendedMailAdapter/Products/PFGExtendedMailAdapter``) into the ``Products`` directory of
+the Zope instance it has to be installed for, and restart the server.
+
+You can also skip the ZCML slug if you install this package the **Zope 2
+Product** way.

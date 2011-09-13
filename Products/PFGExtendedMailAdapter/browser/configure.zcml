@@ -1,0 +1,24 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="Products.PFGExtendedMailAdapter">
+
+  <include package="plone.app.contentmenu" />
+
+  <browser:menuItem
+    for="..interfaces.IPFGExtendedMailAdapter"
+    menu="plone_displayviews"
+    title="PFGExtendedMailAdapter View"
+    action="@@view"
+    description="Default representation of PFGExtendedMailAdapter"
+    />
+
+<!--  <browser:page-->
+<!--    for="..interfaces.IPFGExtendedMailAdapter"-->
+<!--    name="view"-->
+<!--    class=".template.PFGExtendedMailAdapterView"-->
+<!--    permission="zope2.View"-->
+<!--    />-->
+
+</configure>
