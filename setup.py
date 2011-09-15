@@ -4,7 +4,7 @@ import os
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-version = read('Products', 'PFGExtendedMailAdapter', 'version.txt')[:-1]
+version = read('Products', 'PFGExtendedMailAdapter', 'version.txt').strip()
 
 long_description = (
     open("README.txt").read() + "\n" +
@@ -33,8 +33,11 @@ setup(name='Products.PFGExtendedMailAdapter',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
           'Products.PloneFormGen',
+          'leo.testing',
+          'mock',
+          'setuptools',
+          'unittest2',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

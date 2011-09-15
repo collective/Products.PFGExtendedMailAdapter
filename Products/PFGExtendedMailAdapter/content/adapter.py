@@ -1,43 +1,34 @@
-"""A PFGExtendedMailAdapter content type for Products.PloneFormGen"""
-
-__author__  = 'Taito Horiuchi <taito.horiuchi@gmail.com>'
-__docformat__ = 'plaintext'
-
+from AccessControl import ClassSecurityInfo
+from Acquisition import aq_inner
+from Acquisition import aq_parent
+from Products.ATContentTypes.content.base import registerATCT
+from Products.ATContentTypes.content.document import finalizeATCTSchema
+from Products.ATContentTypes.content.folder import ATFolderSchema, ATFolder
+from Products.Archetypes.public import DisplayList
+from Products.Archetypes.public import ObjectField
+from Products.Archetypes.public import Schema
+from Products.CMFCore.permissions import ModifyPortalContent
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
+from Products.PFGExtendedMailAdapter import PFGExtendedMailAdapterMessageFactory as _
+from Products.PFGExtendedMailAdapter.config import PROJECTNAME
+from Products.PFGExtendedMailAdapter.interfaces import IPFGExtendedMailAdapterContentType
+from Products.PloneFormGen.config import EDIT_TALES_PERMISSION
+from Products.PloneFormGen.content.actionAdapter import AnnotationStorage
+from Products.PloneFormGen.content.actionAdapter import LinesField
+from Products.PloneFormGen.content.actionAdapter import MultiSelectionWidget
+from Products.PloneFormGen.content.actionAdapter import TextAreaWidget
+from Products.PloneFormGen.content.fieldsBase import BaseFormField
+from Products.PloneFormGen.content.formMailerAdapter import FormMailerAdapter
+from Products.PloneFormGen.content.formMailerAdapter import formMailerAdapterSchema
+from Products.TemplateFields import ZPTField
 from email import Encoders
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
 from email.MIMEAudio import MIMEAudio
 from email.MIMEBase import MIMEBase
 from email.MIMEImage import MIMEImage
-from AccessControl import ClassSecurityInfo
-from Acquisition import aq_inner,aq_parent
-
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
-from Products.Archetypes.public import (
-    DisplayList,
-    Schema,
-)
-from Products.ATContentTypes.content.base import registerATCT
-from Products.ATContentTypes.content.folder import ATFolderSchema, ATFolder
-from Products.Archetypes.public import ObjectField
-from Products.ATContentTypes.content.document import finalizeATCTSchema
-from Products.TemplateFields import ZPTField
-from Products.PloneFormGen.config import EDIT_TALES_PERMISSION
-from Products.CMFCore.permissions import ModifyPortalContent
-from Products.PloneFormGen.content.actionAdapter import (
-    AnnotationStorage,
-    LinesField,
-    MultiSelectionWidget,
-    TextAreaWidget,
-)
-from Products.PloneFormGen.content.formMailerAdapter import formMailerAdapterSchema, FormMailerAdapter
-#from Products.PloneFormGen import HAS_PLONE25, HAS_PLONE30
-from Products.PloneFormGen.content.fieldsBase import BaseFormField
-
-from Products.PFGExtendedMailAdapter import PFGExtendedMailAdapterMessageFactory as _
-from Products.PFGExtendedMailAdapter.config import PROJECTNAME
-from Products.PFGExtendedMailAdapter.interfaces import IPFGExtendedMailAdapter
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+from zope.interface import implements
 
 _marker = []
 
@@ -58,7 +49,6 @@ class ZPTField(ZPTField):
     def getRaw(self, instance, **kwargs):
         zpt = ObjectField.get(self, instance, **kwargs)
         if getattr(zpt, 'read', _marker) is not _marker:
-#            return zpt.read().encode('utf8')
             return safe_unicode(zpt.read()).encode('utf8')
         else:
             return zpt
@@ -109,17 +99,12 @@ finalizeATCTSchema(PFGExtendedMailAdapterSchema, folderish=True, moveDiscussion=
 class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
     """Extended Mail Adapter"""
 
-    # Standard content type setup
-#    portal_type = meta_type = 'PFGExtendedMailAdapter'
-#    archetype_name = 'Extended Mail Adapter'
     schema = PFGExtendedMailAdapterSchema
-
-#    default_view = immediate_view = 'base_view'
-#    content_icon = 'mailaction.gif'
     _at_rename_after_creation = True
 
 #    __implements__ = (ATFolder.__implements__, )
-    implements = IPFGExtendedMailAdapter
+    # implements = IPFGExtendedMailAdapterContentType
+    implements(IPFGExtendedMailAdapterContentType)
 
 
     def send_form(self, fields, request, **kwargs):
@@ -163,7 +148,6 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
         for attachment in attachments:
             filename = attachment[0]
             ctype = attachment[1]
-#            encoding = attachment[2]
             content = attachment[3]
 
             if ctype is None:
@@ -202,10 +186,6 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
             path=dict(query=path, depth=1),
         )
         for brain in brains:
-#            if HAS_PLONE25 and not HAS_PLONE30:
-#                dl.add(brain.getObject().UID(), brain.Title)
-#            if HAS_PLONE30:
-#                dl.add(brain.UID, brain.Title)
             dl.add(brain.UID, brain.Title)
         return dl
 

@@ -5,7 +5,7 @@
   <class class=".adapter.PFGExtendedMailAdapter">
     <require
         permission="zope2.View"
-        interface="..interfaces.IPFGExtendedMailAdapter"
+        interface="..interfaces.IPFGExtendedMailAdapterContentType"
         />
   </class>
 </configure>

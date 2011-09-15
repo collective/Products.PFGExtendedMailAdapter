@@ -1,36 +1,55 @@
-try:
-    from Zope2.App import zcml
-except ImportError:
-    from Products.Five import zcml
-from Products.Five import fiveconfigure
-from Testing import ZopeTestCase as ztc
-from Products.PloneTestCase import PloneTestCase as ptc
-from Products.PloneTestCase.layer import onsetup
+"""Base module for unittesting"""
 
-@onsetup
-def setup_pfg_ExtendedMailAdapter():
+import unittest2 as unittest
 
-    fiveconfigure.debug_mode = True
-
-    import Products.PloneFormGen
-    zcml.load_config('configure.zcml', Products.PloneFormGen)
-    import Products.PFGExtendedMailAdapter
-    zcml.load_config('configure.zcml', Products.PFGExtendedMailAdapter)
-
-    fiveconfigure.debug_mode = False
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import PloneWithPackageLayer
+from plone.testing import z2
 
 
-    ztc.installProduct('PFGExtendedMailAdapter')
+class PFGExtendedMailAdapterLayer(PloneSandboxLayer):
 
-ztc.installProduct('PloneFormGen')
+    defaultBases = (PLONE_FIXTURE,)
 
-setup_pfg_ExtendedMailAdapter()
-ptc.setupPloneSite(products=['PloneFormGen', 'PFGExtendedMailAdapter'])
-class PFGExtendedMailAdapterTestCase(ptc.PloneTestCase):
-    """We use this base class for all the tests in this package.
-    If necessary, we can put common utility or setup code in here.
-    """
+    def setUpZope(self, app, configurationContext):
+        """Set up Zope."""
+        # Load ZCML
+        import Products.PloneFormGen
+        z2.installProduct(app, 'Products.PloneFormGen')
+        self.loadZCML(package=Products.PloneFormGen)
+        import Products.PFGExtendedMailAdapter
+        self.loadZCML(package=Products.PFGExtendedMailAdapter)
+        z2.installProduct(app, 'Products.PFGExtendedMailAdapter')
 
-class PFGExtendedMailAdapterFunctionalTestCase(ptc.FunctionalTestCase):
-    """Test case class used for functional (doc-)tests
-    """
+    def setUpPloneSite(self, portal):
+        """Set up Plone."""
+        # Install into Plone site using portal_setup
+        self.applyProfile(portal, 'Products.PloneFormGen:default')
+        self.applyProfile(portal, 'Products.PFGExtendedMailAdapter:default')
+
+    def tearDownZope(self, app):
+        """Tear down Zope."""
+        z2.uninstallProduct(app, 'Products.PloneFormGen')
+        z2.uninstallProduct(app, 'Products.PFGExtendedMailAdapter')
+
+
+FIXTURE = PFGExtendedMailAdapterLayer()
+INTEGRATION_TESTING = IntegrationTesting(
+    bases=(FIXTURE,), name="PFGExtendedMailAdapterLayer:Integration")
+FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(FIXTURE,), name="PFGExtendedMailAdapterLayer:Functional")
+
+
+class IntegrationTestCase(unittest.TestCase):
+    """Base class for integration tests."""
+
+    layer = INTEGRATION_TESTING
+
+
+class FunctionalTestCase(unittest.TestCase):
+    """Base class for functional tests."""
+
+    layer = FUNCTIONAL_TESTING

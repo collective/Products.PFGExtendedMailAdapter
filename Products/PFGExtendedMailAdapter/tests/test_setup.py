@@ -1,10 +1,12 @@
-import unittest
+import unittest2 as unittest
 from Products.CMFCore.utils import getToolByName
-from Products.PFGExtendedMailAdapter.tests.base import PFGExtendedMailAdapterTestCase
+from Products.PFGExtendedMailAdapter.tests.base import IntegrationTestCase
 
-class TestSetup(PFGExtendedMailAdapterTestCase):
 
-    def afterSetUp(self):
+class TestSetup(IntegrationTestCase):
+
+    def setUp(self):
+        self.portal = self.layer['portal']
         self.catalog = getToolByName(self.portal, 'portal_catalog')
         self.types = getToolByName(self.portal, 'portal_types')
         self.wftool = getToolByName(self.portal, 'portal_workflow')
@@ -28,6 +30,31 @@ class TestSetup(PFGExtendedMailAdapterTestCase):
         for type in self.content_types:
             self.failUnless(type in self.types.objectIds())
 
+    def test_PFGExtendedMailAdapter_content_type(self):
+        item = self.types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEquals('Extended Mail Adapter', item.title)
+        self.assertEquals('Extended Mail Adapter', item.description)
+        self.assertEquals('PFGExtendedMailAdapter', item.content_meta_type)
+        self.assertEquals('addPFGExtendedMailAdapter', item.factory)
+        self.assertEquals('base_view', item.immediate_view)
+        self.assertEquals(False, item.global_allow)
+        self.assertEquals(False, item.filter_content_types)
+        self.assertEquals((), item.allowed_content_types)
+        self.assertEquals('base_view', item.default_view)
+        self.assertEquals(('base_view',), item.view_methods)
+        aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
+        self.assertEquals(aliases, item.getMethodAliases())
+        self.assertEquals(
+            [
+                ('View', 'view', 'string:${object_url}/view', True, (u'View',)),
+                ('Edit', 'edit', 'string:${object_url}/edit', True, (u'Modify portal content',))
+            ],
+            [
+                (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
+            ]
+        )
+
+
     def test_not_searchable(self):
         self.failUnless('PFGExtendedMailAdapter' in list(self.site_properties.getProperty('types_not_searched')))
 
@@ -43,8 +70,3 @@ class TestSetup(PFGExtendedMailAdapterTestCase):
     # Workflow
     def test_workflow(self):
         self.assertEquals((), self.wftool.getChainForPortalType('PFGExtendedMailAdapter'))
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSetup))
-    return suite
