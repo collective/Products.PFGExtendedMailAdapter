@@ -1,17 +1,25 @@
-Introduction
-============
-Products.PFGExtendedMailAdapter extends the default mail adapter Products.PloneFormGen has with the following additional function:
+Products.PFGExtendedMailAdapter
+===============================
+
+This package extends PloneFormGen default mail adapter with the image and file attachments.
+
+Image and file attachments
+--------------------------
+
+You may want to send e-mail with images and/or files attached with mail adapter.
+
+Add images and/or files under extended mail adapter.
+
+Then you can set those to the adapter through the adapter edit form.
 
 Tested with
 -----------
-* Plone-4.1b2 and Plone-3.3.5
+
+* Plone-4.2x
 * Products.PloneFormGen-1.6.0
 
-* For those who want to use this package for Plone-2.5.x, use version 0.7.5.
+For older Plone versions
+------------------------
 
-Image and file attachments
-------------------------------
-You may want to send e-mail with the same image and/or file attached from the same form.
-By adding those contents within the extended mail adapter, it is possible to set those files to be attached to e-mail.
-
-
+* For Plone-3.x, use version 0.8.1
+* For Plone-2.5.x, use version 0.7.5.
