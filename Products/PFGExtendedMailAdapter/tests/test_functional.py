@@ -1,91 +1,12 @@
-from Products.CMFCore.utils import getToolByName
-# from Products.CMFPlone.tests.utils import MockMailHost
-from Products.MailHost.interfaces import IMailHost
-from zope.component import getSiteManager
-
-import StringIO
-
-# # from Products.PFGExtendedMailAdapter.tests import base
-
-# # class TestSetup(base.PFGExtendedMailAdapterFunctionalTestCase):
-
-# #     def afterSetUp( self ):
-# #         """After SetUp"""
-# #         self.setRoles(('Manager',))
-# #         ## Set up sessioning objects
-# #         ztc.utils.setupCoreSessions(self.app)
-# #         ## Setup MockMailHost
-# #         portal = self.portal
-# #         portal._original_MailHost = portal.MailHost
-# #         portal.MailHost = mailhost = MockMailHost('MailHost')
-# #         sm = getSiteManager(context=portal)
-# #         sm.unregisterUtility(provided=IMailHost)
-# #         sm.registerUtility(mailhost, provided=IMailHost)
-# #         ## Tools
-# #         wftool = getToolByName(portal, 'portal_workflow')
-# #         ## Create Form Folder
-# #         portal.invokeFactory(
-# #             'FormFolder',
-# #             'form',
-# #             title="Form Folder",
-# #         )
-# #         form = portal.form
-# #         wftool.doActionFor(form, "publish")
-# #         form.invokeFactory(
-# #             'PFGExtendedMailAdapter',
-# #             'adapter',
-# #             title = 'Verkkomaksut Adapter',
-# #             recipient_email = 'recipient@abita.fi',
-# #         )
-# #         adapter = form.adapter
-# #         form.setActionAdapter(('adapter',))
-# #         ## Add Image and File under adapter
-# #         dummy_image = StringIO.StringIO('Dummy Image')
-# #         adapter.invokeFactory(
-# #             'Image',
-# #             'dummy_image',
-# #             title = 'dummy.gif',
-# #             image_file = dummy_image,
-# #         )
-# #         dummy_file = StringIO.StringIO('Dummy File')
-# #         adapter.invokeFactory(
-# #             'File',
-# #             'dummy_file',
-# #             title = 'dummy.pdf',
-# #             file_file = dummy_file,
-# #         )
-
-# #     def beforeTearDown(self):
-# #         portal = self.portal
-# #         portal.MailHost = portal._original_MailHost
-# #         sm = getSiteManager(context=portal)
-# #         sm.unregisterUtility(provided=IMailHost)
-# #         sm.registerUtility(aq_base(portal._original_MailHost), provided=IMailHost)
-
-# # def test_suite():
-# #     return unittest.TestSuite([
-
-# #         ztc.FunctionalDocFileSuite(
-# #             'tests/functional/form_functional.txt',
-# #             package='Products.PFGExtendedMailAdapter',
-# #             test_class=TestSetup,
-# #             optionflags=doctest.REPORT_ONLY_FIRST_FAILURE | doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS),
-
-# #             ])
-
-# # if __name__ == '__main__':
-# #     unittest.main(defaultTest='test_suite')
-
-from Testing import ZopeTestCase as ztc
 from Products.PFGExtendedMailAdapter.tests.base import FUNCTIONAL_TESTING
+from Testing import ZopeTestCase as ztc
 from hexagonit.testing.browser import Browser
 from plone.app.testing import TEST_USER_ID
 from plone.app.testing import setRoles
 from plone.testing import layered
-from zope.annotation.interfaces import IAnnotations
-from zope.interface import alsoProvides
 from zope.testing import renormalizing
 
+import StringIO
 import doctest
 import manuel.codeblock
 import manuel.doctest
@@ -93,6 +14,7 @@ import manuel.testing
 import re
 import transaction
 import unittest2 as unittest
+
 
 FLAGS = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS | doctest.REPORT_NDIFF | doctest.REPORT_ONLY_FIRST_FAILURE
 
@@ -102,12 +24,17 @@ CHECKER = renormalizing.RENormalizing([
 ])
 
 
+def prink(e):
+    print eval('"""{0}"""'.format(str(e)))
+
+
 def setUp(self):
     layer = self.globs['layer']
     self.globs.update({
         'portal': layer['portal'],
         'portal_url': layer['portal'].absolute_url(),
         'browser': Browser(layer['app']),
+        'prink': prink,
     })
     ztc.utils.setupCoreSessions(layer['app'])
     portal = self.globs['portal']
@@ -125,45 +52,76 @@ def setUp(self):
     browser.setHeader('Authorization', basic)
 
     # ## Setup MockMailHost
-    # portal._original_MailHost = portal.MailHost
-    # portal.MailHost = mailhost = MockMailHost('MailHost')
-    # sm = getSiteManager(context=portal)
-    # sm.unregisterUtility(provided=IMailHost)
-    # sm.registerUtility(mailhost, provided=IMailHost)
-
-    wftool = getToolByName(portal, 'portal_workflow')
+    from Products.CMFPlone.tests.utils import MockMailHost
+    from Products.MailHost.interfaces import IMailHost
+    from zope.component import getSiteManager
+    portal._original_MailHost = portal.MailHost
+    portal.MailHost = mailhost = MockMailHost('MailHost')
+    sm = getSiteManager(context=portal)
+    sm.unregisterUtility(provided=IMailHost)
+    sm.registerUtility(mailhost, provided=IMailHost)
+    self.globs.update(
+        {
+            'mailhost': portal.MailHost,
+        }
+    )
 
     # Create Form Folder
-    # portal.invokeFactory(
-    #     'FormFolder',
-    #     'form',
-    #     title="Form Folder",
-    # )
-    # form = portal.form
-    # wftool.doActionFor(form, "publish")
-    # form.invokeFactory(
-    #     'PFGExtendedMailAdapter',
-    #     'adapter',
-    #     title = 'Verkkomaksut Adapter',
-    #     recipient_email = 'recipient@abita.fi',
-    # )
-    # adapter = form.adapter
-    # form.setActionAdapter(('adapter',))
-    # ## Add Image and File under adapter
-    # dummy_image = StringIO.StringIO('Dummy Image')
-    # adapter.invokeFactory(
-    #     'Image',
-    #     'dummy_image',
-    #     title = 'dummy.gif',
-    #     image_file = dummy_image,
-    # )
-    # dummy_file = StringIO.StringIO('Dummy File')
-    # adapter.invokeFactory(
-    #     'File',
-    #     'dummy_file',
-    #     title = 'dummy.pdf',
-    #     file_file = dummy_file,
-    # )
+    portal.invokeFactory(
+        'FormFolder',
+        'form',
+        title="Form Folder",
+    )
+    form = portal.form
+    form_url = form.absolute_url()
+    self.globs.update(
+        {
+            'form': form,
+            'form_url': form_url,
+        }
+    )
+    form.invokeFactory(
+        'PFGExtendedMailAdapter',
+        'adapter',
+        title='Verkkomaksut Adapter',
+        recipient_email='recipient@abita.fi',
+    )
+    adapter = form.adapter
+    adapter_url = adapter.absolute_url()
+    self.globs.update(
+        {
+            'adapter': adapter,
+            'adapter_url': adapter_url,
+        }
+    )
+    form.setActionAdapter(('adapter',))
+    ## Add Image and File under adapter
+    dummy_image = StringIO.StringIO('Dummy Image')
+    adapter.invokeFactory(
+        'Image',
+        'dummy_image',
+        title='dummy.gif',
+        image_file=dummy_image,
+    )
+    dummy_image = adapter['dummy_image']
+    dimage_uid = dummy_image.UID()
+    dummy_file = StringIO.StringIO('Dummy File')
+    adapter.invokeFactory(
+        'File',
+        'dummy_file',
+        title='dummy.pdf',
+        file_file=dummy_file,
+    )
+    dummy_file = adapter['dummy_file']
+    dfile_uid = dummy_file.UID()
+    self.globs.update(
+        {
+            'dummy_image': dummy_image,
+            'dimage_uid': dimage_uid,
+            'dummy_file': dummy_file,
+            'dfile_uid': dfile_uid,
+        }
+    )
 
     transaction.commit()
 
@@ -196,4 +154,5 @@ def DocFileSuite(testfile, flags=FLAGS, setUp=setUp, layer=FUNCTIONAL_TESTING):
 def test_suite():
     return unittest.TestSuite([
         DocFileSuite('functional/content_types_functional.txt'),
+        DocFileSuite('functional/form_functional.txt'),
         ])

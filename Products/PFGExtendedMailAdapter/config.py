@@ -6,5 +6,5 @@ PROJECTNAME = "PFGExtendedMailAdapter"
 setDefaultRoles("Add PFGExtendedMailAdapter", ('Manager', 'Owner',))
 
 ADD_PERMISSIONS = {
-    "PFGExtendedMailAdapter" : "Add PFGExtendedMailAdapter",
+    "PFGExtendedMailAdapter": "Add PFGExtendedMailAdapter",
 }

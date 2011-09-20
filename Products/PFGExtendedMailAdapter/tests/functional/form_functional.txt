@@ -1,60 +1,10 @@
-Initial imports and defines.
-----
-    >>> from Products.CMFCore.utils import getToolByName
-    >>> portal_url =  portal.absolute_url()
-    >>> form = portal.form
-    >>> form_url = form.absolute_url()
-    >>> adapter = form.adapter
-    >>> adapter_url = adapter.absolute_url()
-    >>> dummy_image = adapter.dummy_image
-    >>> dimage_uid = dummy_image.UID()
-    >>> dummy_file = adapter.dummy_file
-    >>> dfile_uid = dummy_file.UID()
-    >>> mailhost = getToolByName(portal, 'MailHost')
-    >>> def prink(e): print eval('"""%s"""' %str(e))
+Check the amount of message::
 
-Check the amount of message
-----
     >>> len(mailhost.messages)
     0
 
-Setting up.
-----
-    >>> from Products.Five.testbrowser import Browser
-    >>> browser = Browser()
+Go to Form::
 
-For debugging.
-----
-    >>> browser.handleErrors = True
-    >>> portal.error_log._ignored_exceptions = ()
-
-Turn off portlets.
-----
-    >>> from zope.component import getUtility, getMultiAdapter
-    >>> from plone.portlets.interfaces import IPortletManager
-    >>> from plone.portlets.interfaces import IPortletAssignmentMapping
-
-    >>> left_column = getUtility(IPortletManager, name=u"plone.leftcolumn")
-    >>> left_assignable = getMultiAdapter((portal, left_column), IPortletAssignmentMapping)
-    >>> for name in left_assignable.keys():
-    ...     del left_assignable[name]
-
-    >>> right_column = getUtility(IPortletManager, name=u"plone.rightcolumn")
-    >>> right_assignable = getMultiAdapter((portal, right_column), IPortletAssignmentMapping)
-    >>> for name in right_assignable.keys():
-    ...     del right_assignable[name]
-
-#Log in as the portal owner.
-#----
-#    >>> browser.open(portal_url)
-#    >>> from Products.PloneTestCase.setup import portal_owner, default_password
-#    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-#    >>> browser.getControl(name='__ac_name').value = portal_owner
-#    >>> browser.getControl(name='__ac_password').value = default_password
-#    >>> browser.getControl(name='submit').click()
-
-Go to Form
-----
     >>> browser.open(form_url)
     >>> browser.getControl(name="replyto").value = 'taito.horiuchi@abita.fi'
     >>> browser.getControl(name="topic").value = 'Test Subject'
@@ -62,43 +12,43 @@ Go to Form
     >>> browser.getControl(name="form_submit").click()
     >>> len(mailhost.messages)
     1
+
+Check the newest message sent::
+
     >>> msg = mailhost.messages[-1]
     >>> prink(msg)
     Content-Type: text/html; charset="utf-8"
     MIME-Version: 1.0
-    Content-Transfer-Encoding: base64
+    Content-Transfer-Encoding: quoted-printable
     To: <recipient@abita.fi>
-    From: 
+    From:
     Subject: =?utf-8?q?Form_Submission?=
     MIME-Version: 1.0
-    X-HTTP_X_FORWARDED_FOR: 
-    X-REMOTE_ADDR: 
+    X-HTTP_X_FORWARDED_FOR:
+    X-REMOTE_ADDR:
     X-PATH_INFO: /plone/form
     <BLANKLINE>
     ...
     <BLANKLINE>
 
-Log in as the portal owner and set image and file to the adapter.
-----
-    >>> browser.open(portal_url)
-    >>> from Products.PloneTestCase.setup import portal_owner, default_password
-    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-    >>> browser.getControl(name='__ac_name').value = portal_owner
-    >>> browser.getControl(name='__ac_password').value = default_password
-    >>> browser.getControl(name='submit').click()
+Log in as the portal owner::
+
+    >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
+    >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
+
+Set image and file to the adapter::
+
     >>> browser.open(adapter_url)
     >>> browser.getLink('Edit').click()
-    >>> try:
-    ...     browser.getLink('message').click()
-    ... except:
-    ...     pass
     >>> browser.getControl(name="msg_attachments:list").value = [dimage_uid, dfile_uid]
     >>> browser.getControl('Save').click()
 
+Log out::
+
     >>> browser.getLink('Log out').click()
 
-Go to Form
-----
+Go to Form::
+
     >>> browser.open(form_url)
     >>> browser.getControl(name="replyto").value = 'taito.horiuchi@abita.fi'
     >>> browser.getControl(name="topic").value = 'Test Subject ÄÄÄ'
@@ -107,36 +57,33 @@ Go to Form
     >>> len(mailhost.messages)
     2
 
+Check the newest message sent::
+
     >>> msg = mailhost.messages[-2]
     >>> prink(msg)
     Content-Type: text/html; charset="utf-8"
     MIME-Version: 1.0
-    Content-Transfer-Encoding: base64
+    Content-Transfer-Encoding: quoted-printable
     To: <recipient@abita.fi>
-    From: 
+    From:
     Subject: =?utf-8?q?Form_Submission?=
     MIME-Version: 1.0
-    X-HTTP_X_FORWARDED_FOR: 
-    X-REMOTE_ADDR: 
+    X-HTTP_X_FORWARDED_FOR:
+    X-REMOTE_ADDR:
     X-PATH_INFO: /plone/form
     <BLANKLINE>
     ...
     <BLANKLINE>
 
-Log in as the portal owner and set image and file to the adapter.
-----
-    >>> browser.open(portal_url)
-    >>> from Products.PloneTestCase.setup import portal_owner, default_password
-    >>> browser.open(portal_url + '/login_form?came_from=' + portal_url)
-    >>> browser.getControl(name='__ac_name').value = portal_owner
-    >>> browser.getControl(name='__ac_password').value = default_password
-    >>> browser.getControl(name='submit').click()
+Log in as the portal owner::
+
+    >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
+    >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
+
+Set body to the adapter::
+
     >>> browser.open(adapter_url)
     >>> browser.getLink('Edit').click()
-    >>> try:
-    ...     browser.getLink('template').click()
-    ... except:
-    ...     pass
     >>> html = """
     ... <html xmlns="http://www.w3.org/1999/xhtml">
     ...   <head><title></title></head>
@@ -156,10 +103,12 @@ Log in as the portal owner and set image and file to the adapter.
     >>> browser.getControl(name="body_pt").value = html
     >>> browser.getControl('Save').click()
 
+Log out::
+
     >>> browser.getLink('Log out').click()
 
-Go to Form
-----
+Go to Form::
+
     >>> browser.open(form_url)
     >>> browser.getControl(name="replyto").value = 'taito.horiuchi@abita.fi'
     >>> browser.getControl(name="topic").value = 'Test Subject ÄÄÄ'
@@ -168,17 +117,19 @@ Go to Form
     >>> len(mailhost.messages)
     3
 
+Check the newest message sent::
+
     >>> msg = mailhost.messages[-3]
     >>> prink(msg)
     Content-Type: text/html; charset="utf-8"
     MIME-Version: 1.0
-    Content-Transfer-Encoding: base64
+    Content-Transfer-Encoding: quoted-printable
     To: <recipient@abita.fi>
-    From: 
+    From:
     Subject: =?utf-8?q?Form_Submission?=
     MIME-Version: 1.0
-    X-HTTP_X_FORWARDED_FOR: 
-    X-REMOTE_ADDR: 
+    X-HTTP_X_FORWARDED_FOR:
+    X-REMOTE_ADDR:
     X-PATH_INFO: /plone/form
     <BLANKLINE>
     ...

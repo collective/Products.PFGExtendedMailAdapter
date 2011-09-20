@@ -1,7 +1,7 @@
 <configure
-    xmlns="http://namespaces.zope.org/zope"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:five="http://namespaces.zope.org/five"
+    xmlns="http://namespaces.zope.org/zope"
     i18n_domain="Products.PFGExtendedMailAdapter">
 
   <include package="plone.app.contentmenu" />
@@ -13,12 +13,5 @@
     action="@@view"
     description="Default representation of PFGExtendedMailAdapter"
     />
-
-<!--  <browser:page-->
-<!--    for="..interfaces.IPFGExtendedMailAdapter"-->
-<!--    name="view"-->
-<!--    class=".template.PFGExtendedMailAdapterView"-->
-<!--    permission="zope2.View"-->
-<!--    />-->
 
 </configure>

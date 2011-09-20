@@ -13,7 +13,7 @@ class TestSetup(IntegrationTestCase):
             'PFGExtendedMailAdapter',
         ]
         self.installer = getToolByName(self.portal, 'portal_quickinstaller')
-        self.skins      = getToolByName(self.portal, 'portal_skins')
+        self.skins = getToolByName(self.portal, 'portal_skins')
         self.properties = getToolByName(self.portal, 'portal_properties')
         self.site_properties = getattr(self.properties, 'site_properties')
         self.navtree_properties = getattr(self.properties, 'navtree_properties')
@@ -36,8 +36,8 @@ class TestSetup(IntegrationTestCase):
         folder.invokeFactory(
             'PFGExtendedMailAdapter',
             'adapter',
-            title = 'Verkkomaksut Adapter',
-            recipient_email = 'recipient@abita.fi',
+            title='Verkkomaksut Adapter',
+            recipient_email='recipient@abita.fi',
         )
 
     def test_is_pfg_extended_mail_adapter_installed(self):
@@ -71,7 +71,6 @@ class TestSetup(IntegrationTestCase):
                 (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
             ]
         )
-
 
     def test_not_searchable(self):
         self.failUnless('PFGExtendedMailAdapter' in list(self.site_properties.getProperty('types_not_searched')))

@@ -1,1 +1,0 @@
-from content_types import IPFGExtendedMailAdapterContentType

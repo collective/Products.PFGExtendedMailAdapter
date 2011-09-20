@@ -89,4 +89,4 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
             "This is a Zope Page Template used for rendering of the mail-body. You don't need to modify it, but if you know TAL (Zope's Template Attribute Language) you have the full power to customize your outgoing mails."
         )
         self.assertEqual(widget.rows, 20)
-        self.assertEqual(widget.visible, {'edit':'visible','view':'invisible'})
+        self.assertEqual(widget.visible, {'edit': 'visible', 'view': 'invisible'})

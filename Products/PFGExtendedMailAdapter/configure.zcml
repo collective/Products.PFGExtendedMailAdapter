@@ -5,7 +5,6 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="Products.PFGExtendedMailAdapter">
 
-  <!--<include package="Products.PloneFormGen" />-->
   <!--<include package="Products.CMFCore" />-->
 
   <five:registerPackage package="." initialize=".initialize" />

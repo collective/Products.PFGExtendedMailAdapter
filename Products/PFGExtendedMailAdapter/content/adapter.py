@@ -3,7 +3,8 @@ from Acquisition import aq_inner
 from Acquisition import aq_parent
 from Products.ATContentTypes.content.base import registerATCT
 from Products.ATContentTypes.content.document import finalizeATCTSchema
-from Products.ATContentTypes.content.folder import ATFolderSchema, ATFolder
+from Products.ATContentTypes.content.folder import ATFolder
+from Products.ATContentTypes.content.folder import ATFolderSchema
 from Products.Archetypes.public import DisplayList
 from Products.Archetypes.public import ObjectField
 from Products.Archetypes.public import Schema
@@ -30,7 +31,9 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from zope.interface import implements
 
+
 _marker = []
+
 
 def check_float(value):
     try:
@@ -41,11 +44,12 @@ def check_float(value):
     except TypeError:
         return False
 
+
 class ZPTField(ZPTField):
 
-    security  = ClassSecurityInfo()
-
+    security = ClassSecurityInfo()
     security.declarePrivate('getRaw')
+
     def getRaw(self, instance, **kwargs):
         zpt = ObjectField.get(self, instance, **kwargs)
         if getattr(zpt, 'read', _marker) is not _marker:
@@ -53,48 +57,50 @@ class ZPTField(ZPTField):
         else:
             return zpt
 
-PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema((
 
-    LinesField(
-        name='msg_attachments',
-        schemata='message',
-        required=False,
-        searchable=False,
-        languageIndependent=True,
-        storage=AnnotationStorage(),
-        widget=MultiSelectionWidget(
-            label=_(u'E-mail Attachments'),
-            description=_(u'Please select the attachments to be sent with email when one has successfully finished inputs of the form.'),
-            format='checkbox',
+PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema(
+    (
+        LinesField(
+            name='msg_attachments',
+            schemata='message',
+            required=False,
+            searchable=False,
+            languageIndependent=True,
+            storage=AnnotationStorage(),
+            widget=MultiSelectionWidget(
+                label=_(u'E-mail Attachments'),
+                description=_(u'Please select the attachments to be sent with email when one has successfully finished inputs of the form.'),
+                format='checkbox',
+            ),
+            vocabulary='attachments',
+            enforceVocabulary=True,
         ),
-        vocabulary='attachments',
-        enforceVocabulary=True,
+        ZPTField(
+            name='body_pt',
+            schemata='template',
+            write_permission=EDIT_TALES_PERMISSION,
+            default_method='getMailBodyDefault',
+            read_permission=ModifyPortalContent,
+            widget=TextAreaWidget(
+                description='This is a Zope Page Template '
+                'used for rendering of the mail-body. You don\'t need to modify '
+                'it, but if you know TAL (Zope\'s Template Attribute Language) '
+                'you have the full power to customize your outgoing mails.',
+                description_msgid="help_formmailer_body_pt",
+                label='Mail-Body Template',
+                label_msgid="label_formmailer_body_pt",
+                i18n_domain="ploneformgen",
+                rows=20,
+                visible={'edit': 'visible', 'view': 'invisible'},
+                ),
+            validators=('zptvalidator',),
+        ),
     ),
+)
 
-    ZPTField(
-        name='body_pt',
-        schemata='template',
-        write_permission=EDIT_TALES_PERMISSION,
-        default_method = 'getMailBodyDefault',
-        read_permission=ModifyPortalContent,
-        widget=TextAreaWidget(description = 'This is a Zope Page Template '
-            'used for rendering of the mail-body. You don\'t need to modify '
-            'it, but if you know TAL (Zope\'s Template Attribute Language) '
-            'you have the full power to customize your outgoing mails.',
-            description_msgid = "help_formmailer_body_pt",
-            label = 'Mail-Body Template',
-            label_msgid = "label_formmailer_body_pt",
-            i18n_domain = "ploneformgen",
-            rows = 20,
-            visible = {'edit':'visible','view':'invisible'},
-            ) ,
-        validators=('zptvalidator',),
-        ),
-
-
-    ),)
 
 finalizeATCTSchema(PFGExtendedMailAdapterSchema, folderish=True, moveDiscussion=False)
+
 
 class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
     """Extended Mail Adapter"""
@@ -102,10 +108,7 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
     schema = PFGExtendedMailAdapterSchema
     _at_rename_after_creation = True
 
-#    __implements__ = (ATFolder.__implements__, )
-    # implements = IPFGExtendedMailAdapterContentType
     implements(IPFGExtendedMailAdapterContentType)
-
 
     def send_form(self, fields, request, **kwargs):
         """Send the form.
@@ -115,7 +118,7 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
             body = unicode(body, self._site_encoding())
         portal = getToolByName(self, 'portal_url').getPortalObject()
         email_charset = portal.getProperty('email_charset', 'utf-8')
-        mime_text = MIMEText(body.encode(email_charset , 'replace'),
+        mime_text = MIMEText(body.encode(email_charset, 'replace'),
                 _subtype=self.body_type or 'html', _charset=email_charset)
 
         attachments = self.get_attachments(fields, request)
@@ -176,13 +179,12 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
         host = self.MailHost
         host.send(mailtext)
 
-
     def attachments(self):
         dl = DisplayList()
         catalog = getToolByName(self, 'portal_catalog')
         path = '/'.join(self.getPhysicalPath())
         brains = catalog(
-            portal_type=('File','Image',),
+            portal_type=('File', 'Image',),
             path=dict(query=path, depth=1),
         )
         for brain in brains:
@@ -193,5 +195,6 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
         parent = aq_parent(aq_inner(self))
         ids = [obj.id for obj in parent.contentValues() if isinstance(obj, BaseFormField)]
         return ids
+
 
 registerATCT(PFGExtendedMailAdapter, PROJECTNAME)
