@@ -1,14 +1,16 @@
+Initial imports::
+
     >>> import StringIO
     >>> dummy_image = StringIO.StringIO('Dummy Image')
     >>> dummy_file = StringIO.StringIO('Dummy File')
 
-Log in as the portal owner.
----------------------------
+Log in as the portal owner::
+
     >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
 
-Verify that we can create FormFolder under portal but not PFGExtendedMailAdapter.
-----
+Verify that we can create FormFolder under portal but not PFGExtendedMailAdapter::
+
     >>> browser.open(portal_url)
     >>> browser.getLink(id='formfolder').url.endswith("createObject?type_name=FormFolder")
     True
@@ -17,8 +19,8 @@ Verify that we can create FormFolder under portal but not PFGExtendedMailAdapter
     ...
     LinkNotFoundError
 
-Add FormFolder under portal.
-----
+Add FormFolder under portal::
+
     >>> browser.open(portal_url)
     >>> browser.getLink(id='formfolder').click()
     >>> browser.getControl(name='title').value = "Form Folder"
@@ -32,43 +34,28 @@ Add FormFolder under portal.
     >>> form.Title()
     'Form Folder'
 
-Verify that we can create PFGExtendedMailAdapter.
-----
-    >>> open('/tmp/testbrowser.html', 'w').write(browser.contents)
+Verify that we can create PFGExtendedMailAdapter::
+
     >>> browser.getLink(id='pfgextendedmailadapter').url.endswith("createObject?type_name=PFGExtendedMailAdapter")
     True
 
-Add PFGExtendedMailAdapter.
-----
+Add PFGExtendedMailAdapter under form::
+
     >>> browser.getLink(id='pfgextendedmailadapter').click()
     >>> browser.getControl(name='title').value = "Extended Mail Adapter"
     >>> browser.getControl('Save').click()
-
-#    >>> try:
-#    ...     browser.getControl(name='title').value = "Extended Mail Adapter"
-#    ...     browser.getControl('Save').click()
-#    ... except LookupError:
-#    ...     browser.getControl(name='title').value = "Extended Mail Adapter"
-#    ...     browser.getControl('Save').click()
-
     >>> 'Extended Mail Adapter' in browser.contents
     True
     >>> adapter = form['extended-mail-adapter']
     >>> adapter_url = adapter.absolute_url()
 
-Check if images and files are not shown in msg_attachments field.
-----
-
-#    >>> try:
-#    ...     browser.getLink('message').click()
-#    ... except:
-#    ...     pass
+Check if images and files are not shown in msg_attachments field:
 
     >>> 'name="msg_attachments:list"' not in browser.contents
     True
 
-Add Image and File content type to adapter.
-----
+Add Image and File content type to adapter::
+
     >>> url = '%s/createObject?type_name=Image' % adapter_url
     >>> browser.open(url)
     >>> browser.getControl(name='image_file').mech_control.add_file(dummy_image, filename='dummy.gif')
@@ -84,10 +71,7 @@ Add Image and File content type to adapter.
     >>> browser.open(adapter_url)
     >>> browser.getLink('Edit').click()
 
-#    >>> try:
-#    ...     browser.getLink('message').click()
-#    ... except:
-#    ...     pass
+Check that images and files are shown in msg_attachments field::
 
     >>> browser.getControl(name="msg_attachments:list").value = [dimage_uid]
     >>> browser.getControl('Save').click()

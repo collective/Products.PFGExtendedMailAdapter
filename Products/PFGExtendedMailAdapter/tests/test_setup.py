@@ -1,4 +1,3 @@
-import unittest2 as unittest
 from Products.CMFCore.utils import getToolByName
 from Products.PFGExtendedMailAdapter.tests.base import IntegrationTestCase
 
@@ -21,6 +20,25 @@ class TestSetup(IntegrationTestCase):
 
     def test_is_pfg_installed(self):
         self.failUnless(self.installer.isProductInstalled('PloneFormGen'))
+
+    def test_invokeFactory(self):
+        from plone.app.testing import TEST_USER_ID
+        from plone.app.testing import setRoles
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        import transaction
+        transaction.commit()
+        self.portal.invokeFactory(
+            'FormFolder',
+            'formfolder',
+            title='Form Folder',
+        )
+        folder = self.portal.formfolder
+        folder.invokeFactory(
+            'PFGExtendedMailAdapter',
+            'adapter',
+            title = 'Verkkomaksut Adapter',
+            recipient_email = 'recipient@abita.fi',
+        )
 
     def test_is_pfg_extended_mail_adapter_installed(self):
         self.failUnless(self.installer.isProductInstalled('PFGExtendedMailAdapter'))

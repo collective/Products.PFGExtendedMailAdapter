@@ -1,13 +1,11 @@
-"""Base module for unittesting"""
-
-import unittest2 as unittest
-
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import PloneWithPackageLayer
 from plone.testing import z2
+
+import unittest2 as unittest
 
 
 class PFGExtendedMailAdapterLayer(PloneSandboxLayer):
@@ -18,8 +16,8 @@ class PFGExtendedMailAdapterLayer(PloneSandboxLayer):
         """Set up Zope."""
         # Load ZCML
         import Products.PloneFormGen
-        z2.installProduct(app, 'Products.PloneFormGen')
         self.loadZCML(package=Products.PloneFormGen)
+        z2.installProduct(app, 'Products.PloneFormGen')
         import Products.PFGExtendedMailAdapter
         self.loadZCML(package=Products.PFGExtendedMailAdapter)
         z2.installProduct(app, 'Products.PFGExtendedMailAdapter')

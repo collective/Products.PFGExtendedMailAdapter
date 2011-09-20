@@ -5,11 +5,13 @@
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="Products.PFGExtendedMailAdapter">
 
-  <include package="Products.PloneFormGen" />
-  <include package="Products.CMFCore" />
+  <!--<include package="Products.PloneFormGen" />-->
+  <!--<include package="Products.CMFCore" />-->
 
+  <five:registerPackage package="." initialize=".initialize" />
   <include package=".browser" />
   <include package=".content" />
+  <includeDependencies package="." />
 
   <genericsetup:registerProfile
       name="default"

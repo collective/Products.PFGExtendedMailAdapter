@@ -34,10 +34,13 @@ setup(name='Products.PFGExtendedMailAdapter',
       zip_safe=False,
       install_requires=[
           'Products.PloneFormGen',
-          'leo.testing',
+          'hexagonit.testing',
+          'plone.app.testing',
+          'plone.browserlayer',
           'mock',
           'setuptools',
           'unittest2',
+          'zope.i18nmessageid',
           # -*- Extra requirements: -*-
       ],
       entry_points="""

@@ -19,12 +19,12 @@ def setupExtendedMailAdapterProperties(portal):
         types_not_listed.append(name)
     navtree_properties.manage_changeProperties(metaTypesNotToList = types_not_listed)
 
-    # ## Allowed types
-    # types = getToolByName(portal, 'portal_types')
-    # allowed_content_types = list(types['FormFolder'].allowed_content_types)
-    # if name not in allowed_content_types:
-    #     allowed_content_types.append(name)
-    # types.getTypeInfo('FormFolder').manage_changeProperties(allowed_content_types = allowed_content_types)
+    ## Allowed types
+    types = getToolByName(portal, 'portal_types')
+    allowed_content_types = list(types['FormFolder'].allowed_content_types)
+    if name not in allowed_content_types:
+        allowed_content_types.append(name)
+    types.getTypeInfo('FormFolder').manage_changeProperties(allowed_content_types = allowed_content_types)
 
 def setupVarious(context):
 
