@@ -36,7 +36,7 @@ class TestSetup(IntegrationTestCase):
         folder.invokeFactory(
             'PFGExtendedMailAdapter',
             'adapter',
-            title='Verkkomaksut Adapter',
+            title='Extended Mail Adapter',
             recipient_email='recipient@abita.fi',
         )
 
