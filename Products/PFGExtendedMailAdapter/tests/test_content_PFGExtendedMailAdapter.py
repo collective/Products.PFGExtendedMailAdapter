@@ -1,3 +1,4 @@
+import mock
 import unittest2 as unittest
 
 
@@ -90,3 +91,69 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
         )
         self.assertEqual(widget.rows, 20)
         self.assertEqual(widget.visible, {'edit': 'visible', 'view': 'invisible'})
+
+    def test_check_float(self):
+        from Products.PFGExtendedMailAdapter.content.adapter import check_float
+        self.assertTrue(check_float(0))
+        self.assertTrue(check_float(1))
+        self.assertTrue(check_float(2))
+        self.assertTrue(check_float(2.0))
+        self.assertFalse(check_float('aaa'))
+
+    @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.getToolByName')
+    def test_get_mail_text(self, getToolByName):
+        ## Test need to be done.
+        item = self.createPFGExtendedMailAdapter()
+        item.get_header_body_tuple = mock.Mock()
+        headerinfo = {
+            'From': '',
+            u'X-HTTP_X_FORWARDED_FOR': '',
+            u'X-REMOTE_ADDR': '',
+            'To': ' <recipient@abita.fi>',
+            'Subject': '=?utf-8?q?Form_Submission?=',
+            u'X-PATH_INFO': '/plone/form',
+            'MIME-Version': '1.0'
+        }
+        body = '<html><head><title></title></head><body>Message</body></html>'
+        item.get_header_body_tuple.return_value = (headerinfo, (), body)
+        item._site_encoding = mock.Mock()
+        item._site_encoding.return_value = 'utf-8'
+        portal = mock.Mock()
+        getToolByName().getPortalObject.return_value = portal
+        portal.getProperty.return_value = 'utf-8'
+        item.body_type = None
+        item.get_attachments = mock.Mock()
+        item.get_attachments.return_value = []
+        fields = mock.Mock()
+        request = mock.Mock()
+        text = 'Content-Type: text/html; charset="utf-8"\nMIME-Version: 1.0\nContent-Transfer-Encoding: quoted-printable\nFrom: \nX-HTTP_X_FORWARDED_FOR: \nX-REMOTE_ADDR: \nTo: <recipient@abita.fi>\nMIME-Version: 1.0\nX-PATH_INFO: /plone/form\nSubject: =?utf-8?q?Form_Submission?=\n\n<html><head><title></title></head><body>Message</body></html>'
+        self.assertEqual(item.get_mail_text(fields, request), text)
+        
+
+    @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.getToolByName')
+    @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.DisplayList')
+    def test_attachements(self, DisplayList, getToolByName):
+        item = self.createPFGExtendedMailAdapter()
+        catalog = mock.Mock()
+        getToolByName.return_value = catalog
+        catalog.return_value = [mock.Mock(), mock.Mock()]
+        dl = mock.Mock()
+        DisplayList.return_value = dl
+        item.attachments()
+        self.assertTrue(DisplayList.called)
+        self.assertTrue(dl.add.called)
+
+    @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.aq_parent')
+    def test_field_ids(self, aq_parent):
+        item = self.createPFGExtendedMailAdapter()
+        parent = mock.Mock()
+        parent.contentValues.return_value = []
+        aq_parent.return_value = parent
+        self.assertEqual(item.field_ids(), [])
+        parent.contentValues.return_value = [mock.Mock(), mock.Mock()]
+        aq_parent.return_value = parent
+        self.assertEqual(item.field_ids(), [])
+        from Products.PloneFormGen.content.fieldsBase import BaseFormField
+        parent.contentValues.return_value = [BaseFormField('field01'), BaseFormField('field02')]
+        aq_parent.return_value = parent
+        self.assertEqual(item.field_ids(), ['field01', 'field02'])

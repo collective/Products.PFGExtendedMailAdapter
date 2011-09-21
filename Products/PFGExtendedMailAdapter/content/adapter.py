@@ -31,31 +31,21 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from zope.interface import implements
 
+import email
+
 
 _marker = []
 
 
 def check_float(value):
-    try:
-        float(value)
-        return True
-    except ValueError:
-        return False
-    except TypeError:
-        return False
+    return isinstance(value, int) or isinstance(value, float)
 
 
 class ZPTField(ZPTField):
 
-    security = ClassSecurityInfo()
-    security.declarePrivate('getRaw')
 
     def getRaw(self, instance, **kwargs):
-        zpt = ObjectField.get(self, instance, **kwargs)
-        if getattr(zpt, 'read', _marker) is not _marker:
-            return safe_unicode(zpt.read()).encode('utf8')
-        else:
-            return zpt
+        return safe_unicode(super(self.__class__, self).getRaw(instance, **kwargs))
 
 
 PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema(
@@ -110,8 +100,10 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
 
     implements(IPFGExtendedMailAdapterContentType)
 
-    def send_form(self, fields, request, **kwargs):
-        """Send the form.
+    security = ClassSecurityInfo()
+    security.declarePrivate('get_mail_text')
+    def get_mail_text(self, fields, request, **kwargs):
+        """Get header and body of e-mail as text (string)
         """
         (headerinfo, additional_headers, body) = self.get_header_body_tuple(fields, request, **kwargs)
         if not isinstance(body, unicode):
@@ -122,6 +114,8 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
                 _subtype=self.body_type or 'html', _charset=email_charset)
 
         attachments = self.get_attachments(fields, request)
+
+        ## Attachements
         uids = self.getMsg_attachments()
         if uids:
             reference_catalog = getToolByName(self, 'reference_catalog')
@@ -147,6 +141,7 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
         for a in additional_headers:
             key, value = a.split(':', 1)
             outer.add_header(key, value.strip())
+
 
         for attachment in attachments:
             filename = attachment[0]
@@ -174,10 +169,7 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
             msg.add_header('Content-Disposition', 'attachment', filename=filename)
             outer.attach(msg)
 
-        mailtext = outer.as_string()
-
-        host = self.MailHost
-        host.send(mailtext)
+        return outer.as_string()
 
     def attachments(self):
         dl = DisplayList()
