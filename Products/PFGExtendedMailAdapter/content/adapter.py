@@ -6,23 +6,17 @@ from Products.ATContentTypes.content.document import finalizeATCTSchema
 from Products.ATContentTypes.content.folder import ATFolder
 from Products.ATContentTypes.content.folder import ATFolderSchema
 from Products.Archetypes.public import DisplayList
-from Products.Archetypes.public import ObjectField
 from Products.Archetypes.public import Schema
-from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
 from Products.PFGExtendedMailAdapter import _
 from Products.PFGExtendedMailAdapter.config import PROJECTNAME
 from Products.PFGExtendedMailAdapter.interfaces import IPFGExtendedMailAdapterContentType
-from Products.PloneFormGen.config import EDIT_TALES_PERMISSION
 from Products.PloneFormGen.content.actionAdapter import AnnotationStorage
 from Products.PloneFormGen.content.actionAdapter import LinesField
 from Products.PloneFormGen.content.actionAdapter import MultiSelectionWidget
-from Products.PloneFormGen.content.actionAdapter import TextAreaWidget
 from Products.PloneFormGen.content.fieldsBase import BaseFormField
 from Products.PloneFormGen.content.formMailerAdapter import FormMailerAdapter
 from Products.PloneFormGen.content.formMailerAdapter import formMailerAdapterSchema
-from Products.TemplateFields import ZPTField
 from email import Encoders
 from email.MIMEAudio import MIMEAudio
 from email.MIMEBase import MIMEBase
@@ -31,21 +25,11 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from zope.interface import implements
 
-import email
-
-
 _marker = []
 
 
 def check_float(value):
     return isinstance(value, int) or isinstance(value, float)
-
-
-# class ZPTField(ZPTField):
-
-#     def getRaw(self, instance, **kwargs):
-#         import pdb; pdb.set_trace()
-#         return safe_unicode(super(self.__class__, self).getRaw(instance, **kwargs))
 
 
 PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema(
@@ -64,26 +48,6 @@ PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.c
             ),
             vocabulary='attachments',
             enforceVocabulary=True,
-        ),
-        ZPTField(
-            name='body_pt',
-            schemata='template',
-            write_permission=EDIT_TALES_PERMISSION,
-            default_method='getMailBodyDefault',
-            read_permission=ModifyPortalContent,
-            widget=TextAreaWidget(
-                description='This is a Zope Page Template '
-                'used for rendering of the mail-body. You don\'t need to modify '
-                'it, but if you know TAL (Zope\'s Template Attribute Language) '
-                'you have the full power to customize your outgoing mails.',
-                description_msgid="help_formmailer_body_pt",
-                label='Mail-Body Template',
-                label_msgid="label_formmailer_body_pt",
-                i18n_domain="ploneformgen",
-                rows=20,
-                visible={'edit': 'visible', 'view': 'invisible'},
-                ),
-            validators=('zptvalidator',),
         ),
     ),
 )

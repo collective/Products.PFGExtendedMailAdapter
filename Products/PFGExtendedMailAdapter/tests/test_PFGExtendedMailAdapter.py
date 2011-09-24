@@ -65,33 +65,6 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
         self.assertEqual(field.vocabulary, 'attachments')
         self.assertTrue(field.enforceVocabulary)
 
-    def test_field__body_pt(self):
-        item = self.createPFGExtendedMailAdapter()
-        field = item.schema['body_pt']
-        from Products.PFGExtendedMailAdapter.content.adapter import ZPTField
-        isinstance(field, ZPTField)
-        self.assertEqual(field.schemata, 'template')
-        self.assertTrue(field.required)
-        self.assertFalse(field.searchable)
-        self.assertFalse(field.languageIndependent)
-        from Products.PloneFormGen.config import EDIT_TALES_PERMISSION
-        self.assertEqual(field.write_permission, EDIT_TALES_PERMISSION)
-        from Products.CMFCore.permissions import ModifyPortalContent
-        self.assertEqual(field.read_permission, ModifyPortalContent)
-        self.assertEqual(field.default_method, 'getMailBodyDefault')
-        from Products.Archetypes.public import AnnotationStorage
-        isinstance(field.storage, AnnotationStorage)
-        widget = field.widget
-        from Products.Archetypes.public import TextAreaWidget
-        isinstance(widget, TextAreaWidget)
-        self.assertEqual(widget.label, 'Mail-Body Template')
-        self.assertEqual(
-            widget.description,
-            "This is a Zope Page Template used for rendering of the mail-body. You don't need to modify it, but if you know TAL (Zope's Template Attribute Language) you have the full power to customize your outgoing mails."
-        )
-        self.assertEqual(widget.rows, 20)
-        self.assertEqual(widget.visible, {'edit': 'visible', 'view': 'invisible'})
-
     def test_check_float(self):
         from Products.PFGExtendedMailAdapter.content.adapter import check_float
         self.assertTrue(check_float(0))

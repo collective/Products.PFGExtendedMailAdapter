@@ -3,9 +3,10 @@ Changelog
 
 1.0 (2011-09-24)
 ----------------
-- Support for Plone-3.x finished. [taito]
+- End of Support for Plone-3.x. [taito]
 - License changed from GPL to BSD. [taito]
 - First stable release tested with Plone-4.2x. [taito]
+- Got rid of ZPTField overrides since there seems no UnicodeDecodeError around it.
 
 0.8.1 (2011-04-15)
 ------------------
