@@ -11,7 +11,7 @@ from Products.Archetypes.public import Schema
 from Products.CMFCore.permissions import ModifyPortalContent
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
-from Products.PFGExtendedMailAdapter import PFGExtendedMailAdapterMessageFactory as _
+from Products.PFGExtendedMailAdapter import _
 from Products.PFGExtendedMailAdapter.config import PROJECTNAME
 from Products.PFGExtendedMailAdapter.interfaces import IPFGExtendedMailAdapterContentType
 from Products.PloneFormGen.config import EDIT_TALES_PERMISSION
@@ -43,7 +43,6 @@ def check_float(value):
 
 class ZPTField(ZPTField):
 
-
     def getRaw(self, instance, **kwargs):
         return safe_unicode(super(self.__class__, self).getRaw(instance, **kwargs))
 
@@ -59,7 +58,7 @@ PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.c
             storage=AnnotationStorage(),
             widget=MultiSelectionWidget(
                 label=_(u'E-mail Attachments'),
-                description=_(u'Please select the attachments to be sent with email when one has successfully finished inputs of the form.'),
+                description=_(u'Please select the attachments to be sent with email.'),
                 format='checkbox',
             ),
             vocabulary='attachments',
@@ -102,6 +101,7 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
 
     security = ClassSecurityInfo()
     security.declarePrivate('get_mail_text')
+
     def get_mail_text(self, fields, request, **kwargs):
         """Get header and body of e-mail as text (string)
         """
@@ -141,7 +141,6 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
         for a in additional_headers:
             key, value = a.split(':', 1)
             outer.add_header(key, value.strip())
-
 
         for attachment in attachments:
             filename = attachment[0]

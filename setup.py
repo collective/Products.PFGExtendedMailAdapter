@@ -11,8 +11,9 @@ version = read('Products', 'PFGExtendedMailAdapter', 'version.txt').strip()
 
 long_description = (
     open("README.txt").read() + "\n" +
-    open(os.path.join("docs", "HISTORY.txt")).read() + "\n" +
     open(os.path.join("docs", "INSTALL.txt")).read() + "\n" +
+    open(os.path.join("docs", "HISTORY.txt")).read() + "\n" +
+    open(os.path.join("docs", "CONTRIBUTORS.txt")).read() + "\n" +
     open(os.path.join("docs", "CREDITS.txt")).read()
     )
 

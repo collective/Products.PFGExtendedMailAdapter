@@ -59,7 +59,7 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
         self.assertEqual(widget.label, u'E-mail Attachments')
         self.assertEqual(
             widget.description,
-            u'Please select the attachments to be sent with email when one has successfully finished inputs of the form.'
+            u'Please select the attachments to be sent with email.'
         )
         self.assertEqual(field.default, ())
         self.assertEqual(field.vocabulary, 'attachments')
@@ -128,7 +128,6 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
         request = mock.Mock()
         text = 'Content-Type: text/html; charset="utf-8"\nMIME-Version: 1.0\nContent-Transfer-Encoding: quoted-printable\nFrom: \nX-HTTP_X_FORWARDED_FOR: \nX-REMOTE_ADDR: \nTo: <recipient@abita.fi>\nMIME-Version: 1.0\nX-PATH_INFO: /plone/form\nSubject: =?utf-8?q?Form_Submission?=\n\n<html><head><title></title></head><body>Message</body></html>'
         self.assertEqual(item.get_mail_text(fields, request), text)
-        
 
     @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.getToolByName')
     @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.DisplayList')

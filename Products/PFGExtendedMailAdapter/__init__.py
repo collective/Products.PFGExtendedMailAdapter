@@ -5,7 +5,7 @@ from Products.PFGExtendedMailAdapter.config import PROJECTNAME
 from zope.i18nmessageid import MessageFactory
 
 
-PFGExtendedMailAdapterMessageFactory = MessageFactory(PROJECTNAME)
+_ = MessageFactory(PROJECTNAME)
 
 
 def initialize(context):

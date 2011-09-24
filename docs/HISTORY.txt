@@ -1,11 +1,11 @@
 Changelog
 =========
 
-1.0 (Unreleased)
+1.0 (2011-09-24)
 ----------------
-- Support for Plone-3.x finished.
-- License changed from GPL to BSD.
-
+- Support for Plone-3.x finished. [taito]
+- License changed from GPL to BSD. [taito]
+- First stable release tested with Plone-4.2x. [taito]
 
 0.8.1 (2011-04-15)
 ------------------
