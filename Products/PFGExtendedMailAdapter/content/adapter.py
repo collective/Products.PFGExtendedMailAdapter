@@ -41,10 +41,11 @@ def check_float(value):
     return isinstance(value, int) or isinstance(value, float)
 
 
-class ZPTField(ZPTField):
+# class ZPTField(ZPTField):
 
-    def getRaw(self, instance, **kwargs):
-        return safe_unicode(super(self.__class__, self).getRaw(instance, **kwargs))
+#     def getRaw(self, instance, **kwargs):
+#         import pdb; pdb.set_trace()
+#         return safe_unicode(super(self.__class__, self).getRaw(instance, **kwargs))
 
 
 PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema(
