@@ -13,7 +13,7 @@ import manuel.doctest
 import manuel.testing
 import re
 import transaction
-import unittest2 as unittest
+import unittest
 
 
 FLAGS = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS | doctest.REPORT_NDIFF | doctest.REPORT_ONLY_FIRST_FAILURE
@@ -48,7 +48,7 @@ def setUp(self):
     setRoles(portal, TEST_USER_ID, ['Manager'])
 
     from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
-    basic = 'Basic {0}:{1}'.format(TEST_USER_NAME, TEST_USER_PASSWORD)
+    basic = 'Basic {}:{}'.format(TEST_USER_NAME, TEST_USER_PASSWORD)
     browser.setHeader('Authorization', basic)
 
     # ## Setup MockMailHost

@@ -6,84 +6,129 @@ class TestSetup(IntegrationTestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-        self.catalog = getToolByName(self.portal, 'portal_catalog')
-        self.types = getToolByName(self.portal, 'portal_types')
-        self.wftool = getToolByName(self.portal, 'portal_workflow')
-        self.content_types = [
-            'PFGExtendedMailAdapter',
-        ]
-        self.installer = getToolByName(self.portal, 'portal_quickinstaller')
-        self.skins = getToolByName(self.portal, 'portal_skins')
-        self.properties = getToolByName(self.portal, 'portal_properties')
-        self.site_properties = getattr(self.properties, 'site_properties')
-        self.navtree_properties = getattr(self.properties, 'navtree_properties')
 
-    def test_is_pfg_installed(self):
-        self.failUnless(self.installer.isProductInstalled('PloneFormGen'))
+    def test_package_installed(self):
+        installer = getToolByName(self.portal, 'portal_quickinstaller')
+        self.assertTrue(installer.isProductInstalled('PFGExtendedMailAdapter'))
 
-    def test_invokeFactory(self):
-        from plone.app.testing import TEST_USER_ID
-        from plone.app.testing import setRoles
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
-        import transaction
-        transaction.commit()
-        self.portal.invokeFactory(
-            'FormFolder',
-            'formfolder',
-            title='Form Folder',
-        )
-        folder = self.portal.formfolder
-        folder.invokeFactory(
-            'PFGExtendedMailAdapter',
-            'adapter',
-            title='Extended Mail Adapter',
-            recipient_email='recipient@abita.fi',
-        )
+    def test_pfg_installed(self):
+        installer = getToolByName(self.portal, 'portal_quickinstaller')
+        self.assertTrue(installer.isProductInstalled('PloneFormGen'))
 
-    def test_is_pfg_extended_mail_adapter_installed(self):
-        self.failUnless(self.installer.isProductInstalled('PFGExtendedMailAdapter'))
+    def test_factorytool__PFGExtendedMailAdapter(self):
+        factory = getToolByName(self.portal, 'portal_factory')
+        self.assertTrue(factory.getFactoryTypes()['PFGExtendedMailAdapter'])
 
-    ## Content Types
-    def test_contents_installed(self):
-        for type in self.content_types:
-            self.failUnless(type in self.types.objectIds())
+    def test_metadata__version(self):
+        setup = getToolByName(self.portal, 'portal_setup')
+        self.assertEqual(
+            setup.getVersionForProfile('profile-Products.PFGExtendedMailAdapter:default'), u'1')
 
-    def test_PFGExtendedMailAdapter_content_type(self):
-        item = self.types.getTypeInfo('PFGExtendedMailAdapter')
-        self.assertEquals('Extended Mail Adapter', item.title)
-        self.assertEquals('Extended Mail Adapter', item.description)
-        self.assertEquals('PFGExtendedMailAdapter', item.content_meta_type)
-        self.assertEquals('addPFGExtendedMailAdapter', item.factory)
-        self.assertEquals('base_view', item.immediate_view)
-        self.assertEquals(False, item.global_allow)
-        self.assertEquals(False, item.filter_content_types)
-        self.assertEquals((), item.allowed_content_types)
-        self.assertEquals('base_view', item.default_view)
-        self.assertEquals(('base_view',), item.view_methods)
-        aliases = {'edit': 'atct_edit', 'sharing': '@@sharing', '(Default)': '(dynamic view)', 'view': '(selected layout)'}
-        self.assertEquals(aliases, item.getMethodAliases())
-        self.assertEquals(
-            [
-                ('View', 'view', 'string:${object_url}/view', True, (u'View',)),
-                ('Edit', 'edit', 'string:${object_url}/edit', True, (u'Modify portal content',))
-            ],
-            [
-                (action.title, action.id, action.getActionExpression(), action.visible, action.permissions) for action in item.listActions()
-            ]
-        )
+    def test_rolemap__Add_PFGExtendedMailAdapter__rolesOfPermission(self):
+        permission = "Add PFGExtendedMailAdapter"
+        roles = [
+            item['name'] for item in self.portal.rolesOfPermission(
+                permission) if item['selected'] == 'SELECTED']
+        roles.sort()
+        self.assertEqual(
+            roles, ['Editor', 'Manager', 'Site Administrator'])
 
-    def test_not_searchable(self):
-        self.failUnless('PFGExtendedMailAdapter' in list(self.site_properties.getProperty('types_not_searched')))
+    def test_rolemap__Add_PFGExtendedMailAdapter__acquiredRolesAreUsedBy(self):
+        permission = "Add PFGExtendedMailAdapter"
+        self.assertEqual(
+            self.portal.acquiredRolesAreUsedBy(permission), '')
 
-    def test_use_folder_tabs(self):
-        self.failUnless('PFGExtendedMailAdapter' not in self.site_properties.getProperty('use_folder_tabs'))
+    def test_types__PFGExtendedMailAdapter__metatype(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEqual(ctype.meta_type, 'Factory-based Type Information with dynamic views')
 
-    def test_typesLinkToFolderContentsInFC(self):
-        self.failUnless('PFGExtendedMailAdapter' not in self.site_properties.getProperty('typesLinkToFolderContentsInFC'))
+    def test_types__PFGExtendedMailAdapter__title(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEquals(ctype.title, 'Extended Mail Adapter')
 
-    def test_not_in_navtree(self):
-        self.failUnless('PFGExtendedMailAdapter' in list(self.navtree_properties.getProperty('metaTypesNotToList')))
+    def test_types__PFGExtendedMailAdapter__description(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEquals(ctype.description, '')
 
-    # Workflow
+    def test_types__PFGExtendedMailAdapter__content_meta_type(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEquals(ctype.content_meta_type, 'PFGExtendedMailAdapter')
+
+    def test_types__PFGExtendedMailAdapter__factory(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEquals(ctype.factory, 'addPFGExtendedMailAdapter')
+
+    def test_types__PFGExtendedMailAdapter__immediate_view(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEquals(ctype.immediate_view, 'base_view')
+
+    def test_types__PFGExtendedMailAdapter__global_allow(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertFalse(ctype.global_allow)
+
+    def test_types__PFGExtendedMailAdapter__filter_content_types(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertFalse(ctype.filter_content_types)
+
+    def test_types__PFGExtendedMailAdapter__allowed_content_types(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEqual(ctype.allowed_content_types, ())
+
+    def test_types__PFGExtendedMailAdapter__default_view(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEqual(ctype.default_view, 'base_view')
+
+    def test_types__PFGExtendedMailAdapter__view_methods(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEqual(ctype.view_methods, ('base_view',))
+
+    def test_types__PFGExtendedMailAdapter__aliases(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('PFGExtendedMailAdapter')
+        self.assertEqual(
+            ctype.getMethodAliases(), {
+                '(Default)': '(dynamic view)',
+                'edit': 'atct_edit',
+                'sharing': '@@sharing',
+                'view': '(selected layout)'
+            })
+
+    def test_types__FormFolder__allowed_content_types(self):
+        types = getToolByName(self.portal, 'portal_types')
+        ctype = types.getTypeInfo('FormFolder')
+        self.assertIn('PFGExtendedMailAdapter', ctype.allowed_content_types)
+
+    def test_propertiestool__not_searchable(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        site_properties = getattr(properties, 'site_properties')
+        self.assertIn('PFGExtendedMailAdapter', list(site_properties.getProperty('types_not_searched')))
+
+    def test_propertiestool__use_folder_tabs(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        site_properties = getattr(properties, 'site_properties')
+        self.assertNotIn('PFGExtendedMailAdapter', site_properties.getProperty('use_folder_tabs'))
+
+    def test_proepertiestool__typesLinkToFolderContentsInFC(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        site_properties = getattr(properties, 'site_properties')
+        self.assertNotIn('PFGExtendedMailAdapter', site_properties.getProperty('typesLinkToFolderContentsInFC'))
+
+    def test_propertiestool__not_in_navtree(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        navtree_properties = getattr(properties, 'navtree_properties')
+        self.assertIn('PFGExtendedMailAdapter', list(navtree_properties.getProperty('metaTypesNotToList')))
+
     def test_workflow(self):
-        self.assertEquals((), self.wftool.getChainForPortalType('PFGExtendedMailAdapter'))
+        workflow = getToolByName(self.portal, 'portal_workflow')
+        self.assertEquals((), workflow.getChainForPortalType('PFGExtendedMailAdapter'))

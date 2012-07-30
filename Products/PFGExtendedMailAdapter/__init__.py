@@ -1,8 +1,16 @@
 from Products.Archetypes import atapi
 from Products.CMFCore import utils
-from Products.PFGExtendedMailAdapter.config import ADD_PERMISSIONS
-from Products.PFGExtendedMailAdapter.config import PROJECTNAME
+# from Products.PFGExtendedMailAdapter.config import ADD_PERMISSIONS
+# from Products.PFGExtendedMailAdapter.config import PROJECTNAME
 from zope.i18nmessageid import MessageFactory
+
+
+PROJECTNAME = "PFGExtendedMailAdapter"
+
+
+ADD_PERMISSIONS = {
+    PROJECTNAME: "Add PFGExtendedMailAdapter",
+}
 
 
 _ = MessageFactory(PROJECTNAME)

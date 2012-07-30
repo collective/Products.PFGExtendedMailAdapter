@@ -9,7 +9,7 @@ from Products.Archetypes.public import DisplayList
 from Products.Archetypes.public import Schema
 from Products.CMFCore.utils import getToolByName
 from Products.PFGExtendedMailAdapter import _
-from Products.PFGExtendedMailAdapter.config import PROJECTNAME
+from Products.PFGExtendedMailAdapter import PROJECTNAME
 from Products.PFGExtendedMailAdapter.interfaces import IPFGExtendedMailAdapterContentType
 from Products.PloneFormGen.content.actionAdapter import AnnotationStorage
 from Products.PloneFormGen.content.actionAdapter import LinesField

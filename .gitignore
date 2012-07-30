@@ -1,8 +1,8 @@
-Products/PFGExtendedAdapter/docs/_build/*
 *.egg-info
 *.mo
 *.pyc
 *.pyo
 *~
 .DS_Store
+Products/PFGExtendedAdapter/docs/_build/*
 dist

@@ -2,8 +2,9 @@
 <rolemap>
   <permissions>
     <permission name="Add PFGExtendedMailAdapter" acquire="False">
+      <role name="Editor" />
       <role name="Manager" />
-      <role name="Owner" />
+      <role name="Site Administrator" />
     </permission>
   </permissions>
 </rolemap>
