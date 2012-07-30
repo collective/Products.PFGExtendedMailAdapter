@@ -4,5 +4,6 @@
 *.pyo
 *~
 .DS_Store
+.long-description.html
 Products/PFGExtendedAdapter/docs/_build/*
 dist
