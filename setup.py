@@ -29,7 +29,7 @@ setup(
     keywords='',
     author='Taito Horiuchi',
     author_email='taito.horiuchi@gmail.com',
-    url='https://github.com/taito/Products.PFGExtendedMailAdapter',
+    url='https://github.com/collective/Products.PFGExtendedMailAdapter',
     license='BSD',
     packages=find_packages(exclude=['ez_setup']),
     namespace_packages=['Products'],
