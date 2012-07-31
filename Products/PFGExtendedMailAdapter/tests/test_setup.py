@@ -24,6 +24,26 @@ class TestSetup(IntegrationTestCase):
         self.assertEqual(
             setup.getVersionForProfile('profile-Products.PFGExtendedMailAdapter:default'), u'1')
 
+    def test_propertiestool__not_searchable(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        site_properties = getattr(properties, 'site_properties')
+        self.assertIn('PFGExtendedMailAdapter', list(site_properties.getProperty('types_not_searched')))
+
+    def test_propertiestool__use_folder_tabs(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        site_properties = getattr(properties, 'site_properties')
+        self.assertNotIn('PFGExtendedMailAdapter', site_properties.getProperty('use_folder_tabs'))
+
+    def test_proepertiestool__typesLinkToFolderContentsInFC(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        site_properties = getattr(properties, 'site_properties')
+        self.assertNotIn('PFGExtendedMailAdapter', site_properties.getProperty('typesLinkToFolderContentsInFC'))
+
+    def test_propertiestool__not_in_navtree(self):
+        properties = getToolByName(self.portal, 'portal_properties')
+        navtree_properties = getattr(properties, 'navtree_properties')
+        self.assertIn('PFGExtendedMailAdapter', list(navtree_properties.getProperty('metaTypesNotToList')))
+
     def test_rolemap__Add_PFGExtendedMailAdapter__rolesOfPermission(self):
         permission = "Add PFGExtendedMailAdapter"
         roles = [
@@ -109,26 +129,17 @@ class TestSetup(IntegrationTestCase):
         ctype = types.getTypeInfo('FormFolder')
         self.assertIn('PFGExtendedMailAdapter', ctype.allowed_content_types)
 
-    def test_propertiestool__not_searchable(self):
-        properties = getToolByName(self.portal, 'portal_properties')
-        site_properties = getattr(properties, 'site_properties')
-        self.assertIn('PFGExtendedMailAdapter', list(site_properties.getProperty('types_not_searched')))
-
-    def test_propertiestool__use_folder_tabs(self):
-        properties = getToolByName(self.portal, 'portal_properties')
-        site_properties = getattr(properties, 'site_properties')
-        self.assertNotIn('PFGExtendedMailAdapter', site_properties.getProperty('use_folder_tabs'))
-
-    def test_proepertiestool__typesLinkToFolderContentsInFC(self):
-        properties = getToolByName(self.portal, 'portal_properties')
-        site_properties = getattr(properties, 'site_properties')
-        self.assertNotIn('PFGExtendedMailAdapter', site_properties.getProperty('typesLinkToFolderContentsInFC'))
-
-    def test_propertiestool__not_in_navtree(self):
-        properties = getToolByName(self.portal, 'portal_properties')
-        navtree_properties = getattr(properties, 'navtree_properties')
-        self.assertIn('PFGExtendedMailAdapter', list(navtree_properties.getProperty('metaTypesNotToList')))
-
     def test_workflow(self):
         workflow = getToolByName(self.portal, 'portal_workflow')
         self.assertEquals((), workflow.getChainForPortalType('PFGExtendedMailAdapter'))
+
+    def test_uninstall__package(self):
+        installer = getToolByName(self.portal, 'portal_quickinstaller')
+        installer.uninstallProducts(['PFGExtendedMailAdapter'])
+        self.assertFalse(installer.isProductInstalled('PFGExtendedMailAdapter'))
+
+    def test_uninstall__types__PFGExtendedMailAdapter(self):
+        installer = getToolByName(self.portal, 'portal_quickinstaller')
+        installer.uninstallProducts(['PFGExtendedMailAdapter'])
+        types = getToolByName(self.portal, 'portal_types')
+        self.assertIsNone(types.getTypeInfo('PFGExtendedMailAdapter'))
