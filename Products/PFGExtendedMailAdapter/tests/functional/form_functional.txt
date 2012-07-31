@@ -31,9 +31,8 @@ Check the newest message sent::
     ...
     <BLANKLINE>
 
-Log in as the portal owner::
+Log in as Manager::
 
-    >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
 
 Set image and file to the adapter::
@@ -75,9 +74,8 @@ Check the newest message sent::
     ...
     <BLANKLINE>
 
-Log in as the portal owner::
+Log in as Manager::
 
-    >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
 
 Set body to the adapter::

@@ -23,7 +23,6 @@
     title="Products.PFGExtendedMailAdapter"
     />
 
-  <include package=".browser" />
   <include package=".content" />
 
 </configure>

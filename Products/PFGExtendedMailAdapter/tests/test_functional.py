@@ -2,6 +2,8 @@ from Products.PFGExtendedMailAdapter.tests.base import FUNCTIONAL_TESTING
 from Testing import ZopeTestCase as ztc
 from hexagonit.testing.browser import Browser
 from plone.app.testing import TEST_USER_ID
+from plone.app.testing import TEST_USER_NAME
+from plone.app.testing import TEST_USER_PASSWORD
 from plone.app.testing import setRoles
 from plone.testing import layered
 from zope.testing import renormalizing
@@ -30,24 +32,23 @@ def prink(e):
 
 def setUp(self):
     layer = self.globs['layer']
+    portal = layer['portal']
+    browser = Browser(layer['app'])
     self.globs.update({
-        'portal': layer['portal'],
-        'portal_url': layer['portal'].absolute_url(),
-        'browser': Browser(layer['app']),
+        'portal': portal,
+        'browser': browser,
         'prink': prink,
+        'TEST_USER_NAME': TEST_USER_NAME,
+        'TEST_USER_PASSWORD': TEST_USER_PASSWORD,
     })
     ztc.utils.setupCoreSessions(layer['app'])
-    portal = self.globs['portal']
-    browser = self.globs['browser']
-    portal_url = self.globs['portal_url']
-    browser.setBaseUrl(portal_url)
+    browser.setBaseUrl(portal.absolute_url())
 
     browser.handleErrors = True
     portal.error_log._ignored_exceptions = ()
 
     setRoles(portal, TEST_USER_ID, ['Manager'])
 
-    from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     basic = 'Basic {}:{}'.format(TEST_USER_NAME, TEST_USER_PASSWORD)
     browser.setHeader('Authorization', basic)
 

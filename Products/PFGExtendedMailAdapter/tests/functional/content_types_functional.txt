@@ -4,14 +4,13 @@ Initial imports::
     >>> dummy_image = StringIO.StringIO('Dummy Image')
     >>> dummy_file = StringIO.StringIO('Dummy File')
 
-Log in as the portal owner::
+Log in as Manager::
 
-    >>> from plone.app.testing import TEST_USER_NAME, TEST_USER_PASSWORD
     >>> browser.login(TEST_USER_NAME, TEST_USER_PASSWORD)
 
 Verify that we can create FormFolder under portal but not PFGExtendedMailAdapter::
 
-    >>> browser.open(portal_url)
+    >>> browser.open('/')
     >>> browser.getLink(id='formfolder').url.endswith("createObject?type_name=FormFolder")
     True
     >>> browser.getLink(id='pfgextendedmailadapter').url.endswith("createObject?type_name=PFGExtendedMailAdapter")
@@ -21,7 +20,7 @@ Verify that we can create FormFolder under portal but not PFGExtendedMailAdapter
 
 Add FormFolder under portal::
 
-    >>> browser.open(portal_url)
+    >>> browser.open('/')
     >>> browser.getLink(id='formfolder').click()
     >>> browser.getControl(name='title').value = "Form Folder"
     >>> browser.getControl('Save').click()

@@ -1,7 +1,5 @@
 from Products.Archetypes import atapi
 from Products.CMFCore import utils
-# from Products.PFGExtendedMailAdapter.config import ADD_PERMISSIONS
-# from Products.PFGExtendedMailAdapter.config import PROJECTNAME
 from zope.i18nmessageid import MessageFactory
 
 
@@ -12,8 +10,7 @@ ADD_PERMISSIONS = {
     PROJECTNAME: "Add PFGExtendedMailAdapter",
 }
 
-
-_ = MessageFactory(PROJECTNAME)
+_ = MessageFactory('Products.PFGExtendedMailAdapter')
 
 
 def initialize(context):
@@ -26,7 +23,7 @@ def initialize(context):
 
     for atype, constructor in zip(content_types, constructors):
         utils.ContentInit(
-        '{0}: {1}'.format(PROJECTNAME, atype.portal_type),
+        '{}: {}'.format(PROJECTNAME, atype.portal_type),
             content_types=(atype,),
             permission=ADD_PERMISSIONS[atype.portal_type],
             extra_constructors=(constructor,),
