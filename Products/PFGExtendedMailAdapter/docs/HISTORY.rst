@@ -1,10 +1,10 @@
 Changelog
 ---------
 
-2.0 (2012-07-XX)
+2.0 (2012-07-31)
 ================
 
-- End of support for python-2.6. [taito]
+- Dropped support for python-2.6. [taito]
 
 1.0 (2011-09-24)
 ================

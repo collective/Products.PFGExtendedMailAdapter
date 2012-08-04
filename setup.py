@@ -4,12 +4,15 @@ from setuptools import setup
 import os
 
 
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+
+
 long_description = (
-    open("README.txt").read() + "\n" +
-    open(os.path.join("docs", "INSTALL.txt")).read() + "\n" +
-    open(os.path.join("docs", "HISTORY.txt")).read() + "\n" +
-    open(os.path.join("docs", "CONTRIBUTORS.txt")).read() + "\n" +
-    open(os.path.join("docs", "CREDITS.txt")).read()
+    read('Products', 'PFGExtendedMailAdapter', 'docs', 'README.rst') + "\n" +
+    read('Products', 'PFGExtendedMailAdapter', 'docs', 'HISTORY.rst') + "\n" +
+    read('Products', 'PFGExtendedMailAdapter', 'docs', 'CONTRIBUTORS.rst') + "\n" +
+    read('Products', 'PFGExtendedMailAdapter', 'docs', 'CREDITS.rst')
 )
 
 setup(
