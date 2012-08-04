@@ -9,7 +9,7 @@ Image and file attachments
 
 You may want to send e-mail with images and/or files attached with mail adapter.
 
-To attach those, first add images and/or files under extended mail adapter.
+To attach those, add images and/or files under extended mail adapter.
 
 Then you will be able to set those files to the adapter through the adapter edit form.
 
