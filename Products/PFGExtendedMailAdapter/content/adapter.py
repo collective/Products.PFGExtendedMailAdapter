@@ -25,32 +25,25 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from zope.interface import implements
 
+
 _marker = []
 
 
-def check_float(value):
-    return isinstance(value, int) or isinstance(value, float)
+PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema((
 
-
-PFGExtendedMailAdapterSchema = ATFolderSchema.copy() + formMailerAdapterSchema.copy() + Schema(
-    (
-        LinesField(
-            name='msg_attachments',
-            schemata='message',
-            required=False,
-            searchable=False,
-            languageIndependent=True,
-            storage=AnnotationStorage(),
-            widget=MultiSelectionWidget(
-                label=_(u'E-mail Attachments'),
-                description=_(u'Please select the attachments to be sent with email.'),
-                format='checkbox',
-            ),
-            vocabulary='attachments',
-            enforceVocabulary=True,
-        ),
-    ),
-)
+    LinesField(
+        name='msg_attachments',
+        schemata='message',
+        required=False,
+        searchable=False,
+        languageIndependent=True,
+        storage=AnnotationStorage(),
+        widget=MultiSelectionWidget(
+            label=_(u'E-mail Attachments'),
+            description=_(u'Please select the attachments to be sent with email.'),
+            format='checkbox'),
+        vocabulary='attachments',
+        enforceVocabulary=True)))
 
 
 finalizeATCTSchema(PFGExtendedMailAdapterSchema, folderish=True, moveDiscussion=False)
@@ -141,8 +134,7 @@ class PFGExtendedMailAdapter(ATFolder, FormMailerAdapter):
         path = '/'.join(self.getPhysicalPath())
         brains = catalog(
             portal_type=('File', 'Image',),
-            path=dict(query=path, depth=1),
-        )
+            path=dict(query=path, depth=1))
         for brain in brains:
             dl.add(brain.UID, brain.Title)
         return dl

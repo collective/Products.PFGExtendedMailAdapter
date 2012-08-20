@@ -12,13 +12,12 @@ long_description = (
     read('Products', 'PFGExtendedMailAdapter', 'docs', 'README.rst') + "\n" +
     read('Products', 'PFGExtendedMailAdapter', 'docs', 'HISTORY.rst') + "\n" +
     read('Products', 'PFGExtendedMailAdapter', 'docs', 'CONTRIBUTORS.rst') + "\n" +
-    read('Products', 'PFGExtendedMailAdapter', 'docs', 'CREDITS.rst')
-)
+    read('Products', 'PFGExtendedMailAdapter', 'docs', 'CREDITS.rst'))
 
 setup(
     name='Products.PFGExtendedMailAdapter',
     version='2.0',
-    description="This package extends mail adapter content type from Products.PloneFormGen.",
+    description="Adds extended mail adapter to Products.PloneFormGen.",
     long_description=long_description,
     # Get more strings from
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers

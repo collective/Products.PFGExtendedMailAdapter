@@ -17,7 +17,8 @@ Tested with
 -----------
 
 * Plone-4.2
-* Products.PloneFormGen-1.7.1
+* Plone-4.1.6
+* Products.PloneFormGen-1.7.2
 
 For older Plone versions
 ------------------------

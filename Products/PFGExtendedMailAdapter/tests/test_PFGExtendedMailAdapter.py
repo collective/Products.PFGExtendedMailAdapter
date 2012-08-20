@@ -36,12 +36,10 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
             'locallyAllowedTypes',
             'immediatelyAddableTypes',
             'recipient_name',
-            'recipient_email',
-        ]
+            'recipient_email']
         self.assertEqual(
             [field.getName() for field in item.schema.getSchemataFields('default')],
-            names
-        )
+            names)
 
     def test_field__msg_attachments(self):
         item = self.createPFGExtendedMailAdapter()
@@ -59,19 +57,10 @@ class TestPFGExtendedMailAdapter(unittest.TestCase):
         self.assertEqual(widget.label, u'E-mail Attachments')
         self.assertEqual(
             widget.description,
-            u'Please select the attachments to be sent with email.'
-        )
+            u'Please select the attachments to be sent with email.')
         self.assertEqual(field.default, ())
         self.assertEqual(field.vocabulary, 'attachments')
         self.assertTrue(field.enforceVocabulary)
-
-    def test_check_float(self):
-        from Products.PFGExtendedMailAdapter.content.adapter import check_float
-        self.assertTrue(check_float(0))
-        self.assertTrue(check_float(1))
-        self.assertTrue(check_float(2))
-        self.assertTrue(check_float(2.0))
-        self.assertFalse(check_float('aaa'))
 
     @mock.patch('Products.PFGExtendedMailAdapter.content.adapter.getToolByName')
     def test_get_mail_text(self, getToolByName):

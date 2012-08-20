@@ -61,40 +61,32 @@ def setUp(self):
     sm = getSiteManager(context=portal)
     sm.unregisterUtility(provided=IMailHost)
     sm.registerUtility(mailhost, provided=IMailHost)
-    self.globs.update(
-        {
-            'mailhost': portal.MailHost,
-        }
-    )
+    self.globs.update({
+        'mailhost': portal.MailHost,
+    })
 
     # Create Form Folder
     portal.invokeFactory(
         'FormFolder',
         'form',
-        title="Form Folder",
-    )
+        title="Form Folder")
     form = portal.form
     form_url = form.absolute_url()
-    self.globs.update(
-        {
-            'form': form,
-            'form_url': form_url,
-        }
-    )
+    self.globs.update({
+        'form': form,
+        'form_url': form_url,
+    })
     form.invokeFactory(
         'PFGExtendedMailAdapter',
         'adapter',
         title='Verkkomaksut Adapter',
-        recipient_email='recipient@abita.fi',
-    )
+        recipient_email='recipient@abita.fi')
     adapter = form.adapter
     adapter_url = adapter.absolute_url()
-    self.globs.update(
-        {
-            'adapter': adapter,
-            'adapter_url': adapter_url,
-        }
-    )
+    self.globs.update({
+        'adapter': adapter,
+        'adapter_url': adapter_url,
+    })
     form.setActionAdapter(('adapter',))
     ## Add Image and File under adapter
     dummy_image = StringIO.StringIO('Dummy Image')
@@ -102,8 +94,7 @@ def setUp(self):
         'Image',
         'dummy_image',
         title='dummy.gif',
-        image_file=dummy_image,
-    )
+        image_file=dummy_image)
     dummy_image = adapter['dummy_image']
     dimage_uid = dummy_image.UID()
     dummy_file = StringIO.StringIO('Dummy File')
@@ -111,18 +102,15 @@ def setUp(self):
         'File',
         'dummy_file',
         title='dummy.pdf',
-        file_file=dummy_file,
-    )
+        file_file=dummy_file)
     dummy_file = adapter['dummy_file']
     dfile_uid = dummy_file.UID()
-    self.globs.update(
-        {
-            'dummy_image': dummy_image,
-            'dimage_uid': dimage_uid,
-            'dummy_file': dummy_file,
-            'dfile_uid': dfile_uid,
-        }
-    )
+    self.globs.update({
+        'dummy_image': dummy_image,
+        'dimage_uid': dimage_uid,
+        'dummy_file': dummy_file,
+        'dfile_uid': dfile_uid,
+    })
 
     transaction.commit()
 
@@ -155,5 +143,4 @@ def DocFileSuite(testfile, flags=FLAGS, setUp=setUp, layer=FUNCTIONAL_TESTING):
 def test_suite():
     return unittest.TestSuite([
         DocFileSuite('functional/content_types_functional.txt'),
-        DocFileSuite('functional/form_functional.txt'),
-        ])
+        DocFileSuite('functional/form_functional.txt')])
