@@ -1,8 +1,8 @@
 Changelog
 ---------
 
-2.1 (2012-08-XX)
-==================
+2.1 (2012-08-20)
+================
 
 - Tested with Products.PloneFormGen-1.7.2. [taito]
 
