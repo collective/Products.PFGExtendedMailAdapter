@@ -16,7 +16,7 @@ long_description = (
 
 setup(
     name='Products.PFGExtendedMailAdapter',
-    version='2.1',
+    version='2.2',
     description="Adds extended mail adapter to Products.PloneFormGen.",
     long_description=long_description,
     # Get more strings from
