@@ -1,6 +1,11 @@
 Changelog
 ---------
 
+2.2 (2012-11-14)
+================
+
+- Tested with Plone-4.2.2 and Products.PloneFormGen-1.7.4. [taito]
+
 2.1 (2012-08-20)
 ================
 

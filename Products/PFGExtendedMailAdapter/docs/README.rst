@@ -13,12 +13,11 @@ To attach those, add images and/or files under extended mail adapter.
 
 Then you will be able to set those files to the adapter through the adapter edit form.
 
-Tested with
------------
+Currently tested with
+---------------------
 
-* Plone-4.2
-* Plone-4.1.6
-* Products.PloneFormGen-1.7.2
+* Plone-4.2.2
+* Products.PloneFormGen-1.7.4
 
 For older Plone versions
 ------------------------

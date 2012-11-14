@@ -23,7 +23,6 @@ setup(
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Framework :: Plone",
-        "Framework :: Plone :: 4.1",
         "Framework :: Plone :: 4.2",
         "License :: OSI Approved :: BSD License",
         "Programming Language :: Python",
@@ -38,7 +37,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Plone>=4.1',
+        'Plone>=4.2',
         'Products.PloneFormGen',
         'hexagonit.testing',
         'plone.browserlayer',

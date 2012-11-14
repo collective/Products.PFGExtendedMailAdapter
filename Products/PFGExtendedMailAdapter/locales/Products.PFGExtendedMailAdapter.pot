@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-24 12:14+0000\n"
+"POT-Creation-Date: 2012-11-14 17:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,8 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: Products.PFGExtendedMailAdapter\n"
 
-#: ./content/adapter.py:61
+#: ./content/adapter.py:42
 msgid "E-mail Attachments"
-msgstr ""
-
-#: ./profiles/default/types/PFGExtendedMailAdapter.xml
-msgid "Extended Mail Adapter"
 msgstr ""
 
 #. Default: "Extended Mail Adapter"
@@ -30,7 +26,7 @@ msgstr ""
 msgid "PFGExtendedMailAdapter"
 msgstr ""
 
-#: ./content/adapter.py:62
-msgid "Please select the attachments to be sent with email when one has successfully finished inputs of the form."
+#: ./content/adapter.py:43
+msgid "Please select the attachments to be sent with email."
 msgstr ""
 

@@ -116,8 +116,7 @@ class TestSetup(IntegrationTestCase):
     def test_types__PFGExtendedMailAdapter__aliases(self):
         types = getToolByName(self.portal, 'portal_types')
         ctype = types.getTypeInfo('PFGExtendedMailAdapter')
-        self.assertEqual(
-            ctype.getMethodAliases(), {
+        self.assertEqual(ctype.getMethodAliases(), {
             '(Default)': '(dynamic view)',
             'edit': 'atct_edit',
             'sharing': '@@sharing',

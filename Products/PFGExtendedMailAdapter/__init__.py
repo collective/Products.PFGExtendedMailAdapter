@@ -23,7 +23,7 @@ def initialize(context):
 
     for atype, constructor in zip(content_types, constructors):
         utils.ContentInit(
-        '{}: {}'.format(PROJECTNAME, atype.portal_type),
+            '{}: {}'.format(PROJECTNAME, atype.portal_type),
             content_types=(atype,),
             permission=ADD_PERMISSIONS[atype.portal_type],
             extra_constructors=(constructor,),
