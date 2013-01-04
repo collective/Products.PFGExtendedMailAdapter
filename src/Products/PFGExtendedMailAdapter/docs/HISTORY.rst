@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+2.3 (2013-01-04)
+================
+
+- Tested with Plone-4.2.3 and Products.PloneFormGen-1.7.6. [taito]
+- Added testing integration to Travis CI. [taito]
+
 2.2 (2012-11-14)
 ================
 

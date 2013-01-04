@@ -9,18 +9,16 @@ def read(*rnames):
 
 
 long_description = (
-    read('Products', 'PFGExtendedMailAdapter', 'docs', 'README.rst') + "\n" +
-    read('Products', 'PFGExtendedMailAdapter', 'docs', 'HISTORY.rst') + "\n" +
-    read('Products', 'PFGExtendedMailAdapter', 'docs', 'CONTRIBUTORS.rst') + "\n" +
-    read('Products', 'PFGExtendedMailAdapter', 'docs', 'CREDITS.rst'))
+    read('src', 'Products', 'PFGExtendedMailAdapter', 'docs', 'README.rst') + "\n" +
+    read('src', 'Products', 'PFGExtendedMailAdapter', 'docs', 'HISTORY.rst') + "\n" +
+    read('src', 'Products', 'PFGExtendedMailAdapter', 'docs', 'CONTRIBUTORS.rst') + "\n" +
+    read('src', 'Products', 'PFGExtendedMailAdapter', 'docs', 'CREDITS.rst'))
 
 setup(
     name='Products.PFGExtendedMailAdapter',
     version='2.2',
     description="Adds extended mail adapter to Products.PloneFormGen.",
     long_description=long_description,
-    # Get more strings from
-    # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
         "Framework :: Plone",
         "Framework :: Plone :: 4.2",
@@ -32,17 +30,15 @@ setup(
     author_email='taito.horiuchi@gmail.com',
     url='https://github.com/collective/Products.PFGExtendedMailAdapter',
     license='BSD',
-    packages=find_packages(exclude=['ez_setup']),
+    packages=find_packages('src', exclude=['ez_setup']),
+    package_dir={'': 'src'},
     namespace_packages=['Products'],
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'Plone>=4.2',
         'Products.PloneFormGen',
         'hexagonit.testing',
-        'plone.browserlayer',
-        'setuptools',
-        'zope.i18nmessageid'],
+        'setuptools'],
     entry_points="""
     # -*- Entry points: -*-
 
