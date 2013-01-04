@@ -23,7 +23,6 @@ Check the newest message sent::
     To: <recipient@abita.fi>
     From:
     Subject: =?utf-8?q?Form_Submission?=
-    MIME-Version: 1.0
     X-HTTP_X_FORWARDED_FOR:
     X-REMOTE_ADDR:
     X-PATH_INFO: /plone/form
@@ -66,7 +65,6 @@ Check the newest message sent::
     To: <recipient@abita.fi>
     From:
     Subject: =?utf-8?q?Form_Submission?=
-    MIME-Version: 1.0
     X-HTTP_X_FORWARDED_FOR:
     X-REMOTE_ADDR:
     X-PATH_INFO: /plone/form
@@ -125,7 +123,6 @@ Check the newest message sent::
     To: <recipient@abita.fi>
     From:
     Subject: =?utf-8?q?Form_Submission?=
-    MIME-Version: 1.0
     X-HTTP_X_FORWARDED_FOR:
     X-REMOTE_ADDR:
     X-PATH_INFO: /plone/form
