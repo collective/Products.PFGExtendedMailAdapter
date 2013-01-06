@@ -5,5 +5,5 @@
 *~
 .DS_Store
 .long-description.html
-Products/PFGExtendedMailAdapter/docs/_build/*
 dist
+src/Products/PFGExtendedMailAdapter/docs/_build/*

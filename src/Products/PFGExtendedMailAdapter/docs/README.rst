@@ -16,8 +16,8 @@ Then you will be able to set those files to the adapter through the adapter edit
 Currently tested with
 ---------------------
 
-* Plone-4.2.2
-* Products.PloneFormGen-1.7.4
+* Plone-4.2.3
+* Products.PloneFormGen-1.7.6
 
 For older Plone versions
 ------------------------
@@ -26,14 +26,3 @@ For older Plone versions
 * For Plone-3.x, use version 0.8.1
 * For Plone-2.5.x, use version 0.7.5.
 
-Further Documentation URL
--------------------------
-
-`http://packages.python.org/Products.PFGExtendedMailAdapter/
-<http://packages.python.org/Products.PFGExtendedMailAdapter/>`_
-
-Repository URL
---------------
-
-`https://github.com/collective/Products.PFGExtendedMailAdapter/
-<https://github.com/collective/Products.PFGExtendedMailAdapter/>`_
