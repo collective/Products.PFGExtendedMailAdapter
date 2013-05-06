@@ -7,7 +7,6 @@ Contents:
 
     INSTALL.rst
     HISTORY.rst
-    CONTRIBUTORS.rst
     CREDITS.rst
     LICENSE.rst
 

@@ -16,8 +16,8 @@ Then you will be able to set those files to the adapter through the adapter edit
 Currently tested with
 ---------------------
 
-* Plone-4.2.3
-* Products.PloneFormGen-1.7.6
+* Plone-4.3
+* Products.PloneFormGen-1.7.8
 
 For older Plone versions
 ------------------------

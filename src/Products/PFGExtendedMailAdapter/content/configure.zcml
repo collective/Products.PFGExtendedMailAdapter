@@ -1,7 +1,6 @@
 <configure
-  xmlns:five="http://namespaces.zope.org/five"
-  xmlns="http://namespaces.zope.org/zope"
-  i18n_domain="Products.PFGExtendedMailAdapter">
+  i18n_domain="Products.PFGExtendedMailAdapter"
+  xmlns="http://namespaces.zope.org/zope">
   <class class=".adapter.PFGExtendedMailAdapter">
     <require
       permission="zope2.View"

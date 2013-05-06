@@ -1,6 +1,12 @@
 Changelog
 ---------
 
+2.4 (2013-05-06)
+================
+
+- Moved test packages to extras_require. [taito]
+- Tested with Plone-4.3 and Products.PloneFormGen-1.7.8. [taito]
+
 2.3 (2013-01-06)
 ================
 
